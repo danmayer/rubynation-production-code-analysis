@@ -5,9 +5,32 @@ In a long-lived Ruby application with many contributors, it's common to feel lik
 
 ## Add slides
 
-* oobgc
-* gc profiling (link to mountain west memory talk)
-* https://github.com/tmm1/stackprof
+* garbage collection:
+  * oobgc
+  * [gc tracer](https://github.com/ko1/gc_tracer)
+  * gc profiling (link to mountain west memory talk)
+* "they left the suspension cables because they're still sort of holding up parts of the bridge. Nobody knows which parts, but everybody's pretty sure they're important parts."
+-- http://mashable.com/2014/04/30/programming-sucks/?utm_cid=mash-com-fb-main-link
+* rearview, do you know when someone breaks an old feature? A post purchase feedback survey pulling in good upsell money. A JS change from another team broke the feature, it took 8 days before it was noticed. A feature isn't live unless you have metrics, and near real time alerting.
+* Sam Rawlins [@srawlins](https://twitter.com/srawlins)
+	* [AllocationStats](https://github.com/srawlins/allocation_stats)
+	* [rack-allocation_stats](https://github.com/srawlins/rack-allocation_stats)
+	* [Ruby 2.1 Awesomeness: Pro Object Allocation Tracing](http://www.confreaks.com/videos/3272-mwrc-new-ruby-2-1-awesomeness-pro-object-allocation-tracing)
+* Thanks Aman Gupta [@tmm1](https://twitter.com/tmm1)
+  * [rack#warmup preloading](https://github.com/rack/rack/commit/f791197f501776480a67211afbca0b32c628b2c9)
+      * "With complex frameworks like Rails, many dependencies are auto-loaded
+and data like mime-type and i18n is not loaded into memory by default. This
+often means the first few requests handled by an application are quite
+slow."
+  * [ruby 2.1 method cache](http://tmm1.net/ruby21-method-cache/)
+  * https://github.com/tmm1/stackprof
+  * [history of Ruby's GC](http://tmm1.net/ruby21-rgengc/)
+  
+### Maybe Research
+  
+* [Ruby 2 systemtap](http://avsej.net/2012/systemtap-and-ruby-20/)
+* [dtrace method cache clear tracing](https://github.com/simeonwillbanks/busted/blob/master/dtrace/probes/examples/method-cache-clear.d)
+  
 
 #deck.js
 
