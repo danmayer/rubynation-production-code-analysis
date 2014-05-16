@@ -333,7 +333,7 @@ code {
 
 blockquote {
   font-size: 2em;
-  padding: 1em 2em;
+  padding: 0.2em 0.4em;
   color: #fff;
   border-left: 5px solid #fff;
 }

@@ -56,37 +56,129 @@
     </section>
 
     <section class="slide">
-      <h2>You can't improve if you can't measure, or improve what you don't know</h2>
-      <p>
-        <ul>
-	  <li>We often focus on performance and exception monitoring.</li>
-      	  <li>Some fixate on test code coverage</li>
-	  <li>There is a lot to learn from what the code does in production</li>
-	  <li>Ruby tools for this aren't as good as Java's (and other languages), but
-      are getting better</li>
-          <li>If you know what is happening in production, you also know
-      what is not needed</li>
-          <li>"Measure Anything, Measure Everything" -Etsy & Thanks for Statsd</li>
-        </ul>
-      </p>
+      <h2>Spaghetti Code</h2>
+	funny images
+      <h3>Projects that are many years old seem to always grow towards this</h3>
     </section>
+
+    <section class="slide">
+      <h2>MonoRail</h2>
+      <ul>
+        <li class="slide">
+          <h3>Pre Existing</h3>
+          <img src="./images/monorail.jpg" />
+        </li>
+        <li class="slide">
+          <h3>Consumer</h3>
+          <img src="./images/monorail2.jpg" />
+        </li>
+	<li class="slide">
+          <h3>CRMS</h3>
+          <img src="./images/monorail3.jpg" />
+        </li>
+	<li class="slide">
+          <h3>CMS</h3>
+          <img src="./images/monorail4.jpg" />
+        </li>
+	<li class="slide">
+          <h3>Admin</h3>
+          <img src="./images/monorail5.jpg" />
+        </li>
+	<li class="slide">
+          <h3>Next?</h3>
+          <img src="./images/monorail6.jpg" />
+        </li>
+      </ul>
+    </section>	
+	
+    <section class="slide">
+      <h2>All code is bad</h2>
+	<img src="./images/code-horror.gif" />
+        <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
+        <p>
+	  Also, the bridge was designed as a suspension bridge, but nobody actually knew how to build a suspension bridge, so they got halfway through it and then just added extra support columns to keep the thing standing
+	</p>
+        <p><cite>
+	<a href="http://mashable.com/2014/04/30/programming-sucks/">
+	Peter Welch (Programming Still Sucks)
+	</a>
+	</cite></p>
+    </blockquote>
+    </section>
+
+    <section class="slide">
+      <h2>
+	Less Code Is Better
+      </h2>
+      <ul>
+	  <li>is easier to reason about</li>
+	  <li>is easier to upgrade (Rails, Ruby, and Gem versions)</li>
+	  <li>is easier to refactor</li>
+	  <li>is easier to adapt to new requirements</li>
+      </ul>
+    </section>	
 	
     <section class="slide">
       <h2>How Dead Code Sticks Around</h2>
       <p>
         <ul>
-	  <li>Large teams aren't good at communicating what is no
-      longer needed</li>
+	  <li>
+	  Large teams aren't good at communicating what is no
+      longer needed
+	  </li>
       	  <li>AB tests, never removing a loser</li>
 	  <li>One offs that are irrelevant over time</li>
 	  <li>Deprecation of old endpoints takes time</li>
-	  <li>Refactoring accidently leaves dead code paths behind</li>
-      	  <li>A developer trying to be 'safe' and creating new methods
-      opposed to altering existing methods that have more than one caller</li>
+	  <li>Refactoring leaves dead code paths behind</li>
+      	  <li>A dev trying to be 'safe' & creating new methods
+      opposed to altering existing methods with multiple callers</li>
 	  <li>There are tests, but it is never used in production</li>
           <li>etc...</li>
 	</ul>
       </p>
+    </section>
+
+    <section class="slide">
+      <h2>
+	Solution: Clean Up Dead Code
+      </h2>
+      <ul>
+	  <li>If All Code is Bad</li>
+	  <li>Less Code is Better</li>
+	  <li>Keep Only the Code Needed, No More</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>All code is bad</h2>
+	<img src="./images/code-horror.gif" />
+        <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
+        <p>
+	  They left the suspension cables because they're still sort
+      of holding up parts of the bridge. Nobody knows which parts, but
+      everybody's pretty sure they're important parts.
+	</p>
+        <p><cite>
+	<a href="http://mashable.com/2014/04/30/programming-sucks/">
+	Peter Welch (Programming Still Sucks)
+	</a>
+	</cite></p>
+    </blockquote>
+    </section>
+
+    <section class="slide">
+      <h2>Production Code Analysis</h2>
+	<img src="./images/code-horror.gif" />
+        <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
+        <p>
+	  Nobody knows which parts, but everybody's pretty sure they're important parts.
+	</p>
+        <p><cite>
+	<a href="http://mashable.com/2014/04/30/programming-sucks/">
+	Peter Welch (Programming Still Sucks)
+	</a>
+	</cite></p>
+    </blockquote>
     </section>
 
     <section class="slide">
@@ -95,16 +187,26 @@
         <ul>
       	  <li>Use NewRelic or Appneta (formerly Tracelytics)</li>
 	  <li>Stats Instrumentation</li>
-	  <li>Production Code Coverage</li>
 	  <li>Use Logs</li>
-	  <li>At LivingSocial using Stats Instrumentation & Coverband, we have
-      removed tens of thousands of lines app of code.<br/>
-	  (removing hundreds of thousands if you include CSS, JS,
-      tests, and helping to deprecate and shut down services.)</li>
+	  <li>Production Code Coverage</li>
         </ul>
       </p>
     </section>
 
+    <section class="slide">
+	<h2>Street Cred</h2>
+	<img src="./images/deals_loc.png" />
+	<p>(grown up marketing speak: "steet cred" => "social proof")</p>
+    </section>
+
+    <section class="slide">
+	<h2>Team Effort</h2>
+	<pre>[~/projects/deals]git log --numstat --pretty="%H" --author="dan.mayer" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
++20973, -47034</pre>
+	<pre>[~/projects/deals] git log --numstat --pretty="%H" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
++197326, -215514</pre>
+    </section>
+	
     <section class="slide">
       <h2>Using 3rd Party tool (NewRelic)</h2>
       <p>Easiest way, look transactions over last 7 days: (note won't
