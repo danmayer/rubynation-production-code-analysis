@@ -261,7 +261,12 @@
       <div class="slide-notes">
 	I am going to go through some examples of processes we have
       used to find unused code. From very simple methods, to more
-      complicated processes.
+      complicated processes. Also, note if you run `rake stats` on a
+      Rail app and have less than 3-5K lines of application code. You
+      can probably just reason about all this in your head pretty
+      easily and some of these tools might seem like overkill. We have
+      apps pushing 60K lines of app code, that excludes view layers,
+      JS, CSS.
       </div>
     </section>
 
@@ -483,6 +488,16 @@ class HomeController < ApplicationController
     end
   end
 end</code></pre>
+      <div class="slide-notes">
+	One problem with track only controllers and actions, is that
+      the often serve multiple formats and request paths. For that,
+      one of trackers can be useful. Tracking format specific
+      endpoints, conditional paths. We use the deprecated namespace in
+      our apps to track helper methods, model methods, anywhere. It
+      also provides a quick way to jump into code cleanup. Grep the
+      code for deprecated stats, check graphite and safely remove
+      anything no longer in use.
+      </div>
     </section>
 
     <section class="slide">
@@ -501,6 +516,18 @@ def example_html_stripping_method
   end
   #...
 end</code></pre>
+      <div class="slide-notes">
+	Shout out to Tyler Montgomery, who checked this great idea
+  into git one day.
+	
+	One off trackers, aren't only useful for finding unused
+  code. It can be a great way to launch performance enhancements. To
+  gether data on the performance of two implmentations. Simple split
+  the code between old and new while sending the timing info to
+  StatsD. Gather performance information against actual production
+  usage and data, to determine the best algorithm and have a good idea
+  of how much better it actually is.
+      </div>
     </section>
 
     <section class="slide">
@@ -523,6 +550,96 @@ end</code></pre>
     end
   end
 ...</code></pre>
+      <div class="slide-notes">
+	Another piece of an application that can easily become a out
+    of sync unknown is translation keys over time. Translation keys
+    end up causing a not fun memory bloat for production rails
+    processes. That unchecked over time can be quite costly for
+    overall performance. Chris Morris built Humperdink which has a
+    number of uses, but is particularly well suited to help no longer
+    used translation keys. Check out the gem for more details on how
+    to track translations, but the above shows a bit of the basics.
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Logs</h2>
+      <p>
+        <ul>
+	  <li>Logs need to be searchable, real time is best.
+	  (ElasticSearch/Kibana, Splunk, Hadoop)</li>
+	  <li>If you have multiple apps that communicate they should
+      be in the same system.</li>
+	  <li>All your logs should be in one place 
+	  (cron, nginx access/error, background jobs, rails logs)</li>
+          <li>Try to standardize log format: important keys / variables
+      across systems</li>
+        </ul>
+      </p>
+      <div class="slide-notes">
+	Your application logs are a mine of information just waiting
+      to help you out. Again if you don't have NR or 3rd party
+      performance tools. You can get great rollups of performance for
+      controllers and actions with Kibana, Splunk, or other log
+      querying tools.
+
+	You can implement render_tracking, translation_key tracking,
+      and most of the other mention systems just by logging data in
+      querable formats to your logs and crafting the correct queries.
+
+	Logs can go deep when your digging into specific problems like
+      debugging exceptions. All your exceptions should link you back
+      to the original logs related to the request causing the
+      exceptions.
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Logs: Deprecation of caller</h2>
+      <p>
+	implement
+      </p>
+      <div class="slide-notes">
+	Trying to discover how the code reaches a path you never
+      expect or intend it to reach anymore can be complicated. Perhaps
+      a old client gem exists out there in the wild, or someone is
+      linking to a url with params you thought were
+      deprecated. Whatever the case youc an log the caller inside a
+      path to figure out the call path that got there. If you have a
+      request_id, you can then tie that back to the initial entry
+      point and parameters into your application.
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Logs: Better with Imprint #TODO ZipKin and request_id</h2>
+      <p>Make your logs better with a gem from LS: 
+	<a href="https://github.com/livingsocial/imprint">Imprint</a>
+	 <ul>
+	   <li>Request tracing in logs:<br/>
+	    All Rails.logger calls during a request tagged with a trace_id</li>
+	   <li>Exceptions include trace_id so you can fetch all logs
+      related to a request that caused an exception</li>
+           <li>Background Jobs failures include the trace_id to find
+      the request that queued the job</li>
+           <li>Cross app tracing, have client gems pass a header, and
+      back end APIs will include the same trace_id as the initial
+      front end request</li>
+	 </ul>
+      </p>
+       <div class="slide-notes">
+	 Imprint builds on ideas from Twitter. Twitter pushed ZipKin,
+      but most of the tooling is in the Scala world. Rails also
+      provides a request_id which IMPRINT can use. Imprint makes it
+      easy to capture a request trace and help propigate it through
+      multiple systems. Simplifying the process to integrate it into
+      multiple tools.
+
+	 We use imprint in our base internal api-client. This means
+       all inter-app service calls will pass the current requests
+       trace_id as a header to the server. The api service then uses
+       this id while logging its requests.
+       </div>
     </section>
 
     <section class="slide">
@@ -542,6 +659,33 @@ end</code></pre>
 	  </li>
         </ul>
       </p>
+      <div class="slide-notes">
+	Most of the above monitors focus on a particular piece of the
+      puzzle. It takes effort to setup ahead of time and then time to
+      collect and analyze the data. It seemed like a pattern could be
+      abstracted, which would be more generally useful. Really I
+      wanted to know how often a given line of code was being run in
+      production. Ruby VM tooling around this area keeps getting
+      better, while Coverage make this easy to do for tests, it has
+      some bugs that prevent it being used for production. I ended up
+      working with set_trace_fun and sampling a percentage of requests
+      to get some great data.
+
+	Unfortunately, the perfomance hit is pretty large for big
+      applications. I am running this on Monorail size apps with about
+      1% of requests being sampled. While I can run 60-90% of requests
+      small sinatra apps without noticing much of a performance
+      impact.
+
+	I am currently in progress with a native c extension which
+      should significantly improve performance. I also think that
+      using a sampling profiler based on time opposed to sampling full
+      requests, which was built into Ruby 2.1, that I should be able
+      to gather this data in production without a noticiable impact on
+      application performance. If anyone has strong C skills and is
+      interested in helping out, I am definitely in need of some help
+      in this area. 
+      </div>
     </section>
 
    <section class="slide">
@@ -554,10 +698,41 @@ Coverband.configure do |config|
   config.root_paths        = ['/app/']
   config.ignore            = ['vendor']
   config.startup_delay = Rails.env.production? ? 15 : 1
-  config.percentage    = Rails.env.production? ? 20.0 : 90.0
+  config.percentage    = Rails.env.production? ? 10.0 : 95.0
   config.stats         = Statsd.new('stat.my.com', 25)
   config.verbose       = Rails.env.production? ? false: true
 end</code></pre>
+      <div class="slide-notes">
+	Coverband works as rack middleware. It decides to sample or
+      not as a request comes in. If sampling is on it stores the
+      coverage of code run during that request and sync it up to redis
+      at the end of the request.
+	
+	To configure coverband you can either put this config block
+      where necessary of place it in `config/coverband.rb` which it
+      gets picked up when you call Coverband.confgure.
+
+	`Coverband.parse_baseline` tells Coverband where to find a
+      baseline recording of code coverage just loading the
+      application. A lot of Ruby code is run just loading the Rails
+      app, and that isn't capture during the request cycle. So we can
+      just record that once and merge it in with live coverage data.
+
+	Setting it up, you can see I provide different settings for
+      development and production. It makes it more more easy test and
+      verify in development with a large sample rate.
+
+	A couple settings to note, `config.startup_delay` Rails
+      defines a lot of methods dynamically on the first few requests
+      we ignore those because they can run much slower with Coverband.
+
+	percentage is the number of requests that we will sample and
+      record with coverband.
+
+	ignore lets you not record section of code you wish to
+      skip. Skipping heavy no app code like vendor or lib can also
+      help to reduce the performance impacts.
+      </div>
     </section>
 
     <section class="slide">
@@ -574,41 +749,29 @@ Coverband.configure
 
 use Coverband::Middleware
 run ActionController::Dispatcher.new</code></pre>
+      <div class="slide-notes">
+	After installing the gem and creating a config file. You want
+	to include the rake tasks into your `Rakefile` and you want to
+	setup the middleware.
+
+	In this example I am setting up the middleware as early as
+      possible in the `config.ru`. Really unless you have lots of
+      custom rack middleware setting it up anywhere in your middleware
+      stack should be find. 
+      </div>
     </section>
 
-    <section class="slide">
-      <h2>Logs</h2>
-      <p>
-        <ul>
-	  <li>Logs need to be searchable, real time is best.
-	  (ElasticSearch/Kibana, Splunk, Hadoop)</li>
-	  <li>All your logs should be in one place 
-	  (cron, nginx access/error, background jobs, rails logs)</li>
-      	  <li>If you have multiple apps that communicate they should
-      be in the same system.</li>
-          <li>Try to standardize log format & some keys / variables
-      across systems</li>
-        </ul>
-      </p>
-    </section>
-
-    <section class="slide">
-      <h2>Logs: Better with Imprint</h2>
-      <p>Another LS gem
-	<a href="https://github.com/livingsocial/imprint">Imprint</a>
-	 <ul>
-	   <li>Request tracing in logs:<br/>
-	    All Rails.logger calls during a request tagged with a trace_id</li>
-	   <li>Exceptions include trace_id so you can fetch all logs
-      related to a request that caused an exception</li>
-           <li>Background Jobs failures include the trace_id to find
-      the request that queued the job</li>
-           <li>Cross app tracing, have client gems pass a header, and
-      back end APIs will include the same trace_id as the initial
-      front end request</li>
-	 </ul>
-      </p>
-	
+          <section class="slide">
+      <h2>Production Code Coverage: Coverband</h2>
+      <pre><code>capture example add heavily used file support</code></pre>
+      <div class="slide-notes">
+	Coverband can give you interesting information and help you to
+      find hotspots of code in development mode as well. If you enable
+      verbose at the end of each request that coverband records it
+      outputs to the configured log a bunch of useful stats. Breaking
+      down files that were called the most, as well as the most common
+      lines called in heavily used files.
+      </div>
     </section>
 
     <section class="slide ls">
