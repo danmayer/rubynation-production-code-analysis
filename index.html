@@ -57,8 +57,24 @@
 
     <section class="slide">
       <h2>Spaghetti Code</h2>
-	funny images
-      <h3>Projects that are many years old seem to always grow towards this</h3>
+      <table style="text-align:center; width='100%'"><tr><td>
+	      <img src="./images/spagetti-code-bowl.png" />
+	</td><td>
+	      <img src="./images/spaghetti-code-spaghetti-fork.jpg" />
+      </td></tr></table>
+      
+      <div class="slide-notes">
+	We have all seen spaghetti code. It is hard to understand and
+      follow all the possible paths. Difficult to change, but as
+      projects grow and change seems impossible to entirely
+      avoid. Untangling it is hard, first I want to briefly and quickly explain
+      how a project can reach a point where there is over 200KLOC that
+      can be removed. Then I can explain some processes to help find
+      and remove unnessary complexity.
+	spaghetti-code-bowl:
+      http://overloadstudios.blogspot.com/2010/11/debugging-spaghetti-code.html
+	spaghetti-fork: http://www.troll.me/2011/12/17/spaghetti-fork/spaghetti-code-spaghetti-fork/
+      </div>
     </section>
 
     <section class="slide">
@@ -89,35 +105,23 @@
           <img src="./images/monorail6.jpg" />
         </li>
       </ul>
-    </section>	
-	
-    <section class="slide">
-      <h2>All code is bad</h2>
-	<img src="./images/code-horror.gif" />
-        <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
-        <p>
-	  Also, the bridge was designed as a suspension bridge, but nobody actually knew how to build a suspension bridge, so they got halfway through it and then just added extra support columns to keep the thing standing
-	</p>
-        <p><cite>
-	<a href="http://mashable.com/2014/04/30/programming-sucks/">
-	Peter Welch (Programming Still Sucks)
-	</a>
-	</cite></p>
-    </blockquote>
+      <div class="slide-notes">
+	Yes, a large years old project. We have a Monorail! A bit of
+      history. The application began as a fork of an existing project
+      to quickly validate an idea. That grew into a consumer business. That
+      business app was forked to seperate out some Costomer
+      Relationship Manament functions. Later the consumer business
+      app was forked again to split out the content management
+      functions, and finally again spliting out admin
+      functionality. This means all that apps share some of the same
+      code, but after each split they have less responsibility. Which
+      code is needed for the smaller slice of responsibilities, what
+      can be removed from the parent app? Looking production runtime
+      can tell you. 
+	images: simpsons
+      </div>
     </section>
 
-    <section class="slide">
-      <h2>
-	Less Code Is Better
-      </h2>
-      <ul>
-	  <li>is easier to reason about</li>
-	  <li>is easier to upgrade (Rails, Ruby, and Gem versions)</li>
-	  <li>is easier to refactor</li>
-	  <li>is easier to adapt to new requirements</li>
-      </ul>
-    </section>	
-	
     <section class="slide">
       <h2>How Dead Code Sticks Around</h2>
       <p>
@@ -136,6 +140,54 @@
           <li>etc...</li>
 	</ul>
       </p>
+      <div class="slide-notes">
+	Beyond Monorails, dead code can slip into a system many
+      ways. I am not really going into all the details, but suffice to
+      say. Every system I have worked on grows and at some point has
+      unnessary code tucked away into the corners at some
+      point. Features that don't quite justify their UI complexity,
+      pivoting away from some direction... Whatever reason there is,
+      code sits around.
+      </div>
+    </section>
+	
+    <section class="slide">
+      <h2>All code is bad</h2>
+      <img src="./images/code-horror.gif" />
+      <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
+        <p>
+	  Also, the bridge was designed as a suspension bridge, but nobody actually knew how to build a suspension bridge, so they got halfway through it and then just added extra support columns to keep the thing standing
+	</p>
+        <p><cite>
+	<a href="http://mashable.com/2014/04/30/programming-sucks/">
+	Peter Welch (Programming Still Sucks)
+	</a>
+	</cite></p>
+      </blockquote>
+      <div class="slide-notes">
+	Their is a pretty hilarious article how "programming still
+      sucks" by Peter Welch. In it he makes the analogy of a team
+      building a bridge, not knowing what they are doing building half
+      suspension and half support.
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>
+	Less Code Is Better
+      </h2>
+      <ul>
+	  <li>is easier to reason about</li>
+	  <li>is easier to upgrade (Rails, Ruby, and Gem versions)</li>
+	  <li>is easier to refactor</li>
+	  <li>is easier to adapt to new requirements</li>
+      </ul>
+      <div class="slide-notes">
+	Obviously, a bit jokingly that article states that "all code
+      is bad". Obviously if the code is doing work it has some value,
+      but I don't think I have to spend time on why having less code
+      and simpler systems is better.
+      </div>
     </section>
 
     <section class="slide">
@@ -143,16 +195,21 @@
 	Solution: Clean Up Dead Code
       </h2>
       <ul>
-	  <li>If All Code is Bad</li>
+	  <li>If "All Code is Bad"</li>
 	  <li>Less Code is Better</li>
 	  <li>Keep Only the Code Needed, No More</li>
       </ul>
+      <div class="slide-notes">
+	We can make our projects better by only working on the code we
+      need. The code that is actively adding value to our
+      business.
+      </div>
     </section>
 
     <section class="slide">
       <h2>All code is bad</h2>
-	<img src="./images/code-horror.gif" />
-        <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
+      <img src="./images/code-horror.gif" />
+      <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
         <p>
 	  They left the suspension cables because they're still sort
       of holding up parts of the bridge. Nobody knows which parts, but
@@ -163,13 +220,17 @@
 	Peter Welch (Programming Still Sucks)
 	</a>
 	</cite></p>
-    </blockquote>
+      </blockquote>
+      <div class="slide-notes">
+	In the article the bridge analogy continues, explaining why the
+      team left the suspension cables up after switching to a support
+      column bridge.
+      </div>
     </section>
 
     <section class="slide">
-      <h2>Production Code Analysis</h2>
-	<img src="./images/code-horror.gif" />
-        <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
+      <h2>How to know: Production Code Analysis</h2>
+      <blockquote cite="http://mashable.com/2014/04/30/programming-sucks/">
         <p>
 	  Nobody knows which parts, but everybody's pretty sure they're important parts.
 	</p>
@@ -178,25 +239,44 @@
 	Peter Welch (Programming Still Sucks)
 	</a>
 	</cite></p>
-    </blockquote>
+      </blockquote>
+      <div class="slide-notes">
+	We don't have to settle for guessing, we can solve this
+      problem... With you know "science"
+      </div>
     </section>
 
     <section class="slide">
-      <h2>Finding Dead Code</h2>
+      <h2>Analyzing Production Code</h2>
       <p>
         <ul>
-      	  <li>Use NewRelic or Appneta (formerly Tracelytics)</li>
-	  <li>Stats Instrumentation</li>
+      	  <li>Use <a href="http://newrelic.com">NewRelic</a>,
+	  <a href="https://www.skylight.io/">skylight.io</a>,
+	  or <a href="http://info.appneta.com/watrial.html?product=traceview">Appneta Traceview (formerly Tracelytics)</a></li>
+	  <li>Custom Stats Instrumentation</li>
 	  <li>Use Logs</li>
 	  <li>Production Code Coverage</li>
         </ul>
       </p>
+      <div class="slide-notes">
+	I am going to go through some examples of processes we have
+      used to find unused code. From very simple methods, to more
+      complicated processes.
+      </div>
     </section>
 
     <section class="slide">
 	<h2>Street Cred</h2>
 	<img src="./images/deals_loc.png" />
-	<p>(grown up marketing speak: "steet cred" => "social proof")</p>
+	<p>(grown up marketing speak: "steet cred" => "social
+	proof")</p>
+      <div class="slide-notes">
+	Just to show that this isn't some idea, these are processes we
+	have been able to put into practice. Here is my history on one
+	of our Monorails apps. I am pretty proud to have removed
+	nearly 2 lines of code for every one added, while delivery
+	additional functionality and faster performance.
+      </div>
     </section>
 
     <section class="slide">
@@ -205,6 +285,15 @@
 +20973, -47034</pre>
 	<pre>[~/projects/deals] git log --numstat --pretty="%H" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
 +197326, -215514</pre>
+        <div class="slide-notes">
+	  Also, wanted to point out getting code bases into shape. Is
+	really a team effort. As a team we celebrate our code
+	improvements. Cheers particularly good commits, faster tests,
+	code removals. Linking to little victories in campfire all the
+	way. One of the split out Monorails previously mentioned went
+	from a total LOC of 160K (including html,js, css assets) to
+	only 15K becoming a relatively tame and simple app.
+	</div>
     </section>
 	
     <section class="slide">
@@ -212,6 +301,15 @@
       <p>Easiest way, look transactions over last 7 days: (note won't
       help with specific formats or never hit endpoints)</p>
       <img src="./images/NR_usage.png" />
+      <div class="slide-notes">
+	One of the easiest ways to gain insight into what code is
+      being used in production is checking with any of the 3rd part
+      performance monitoring tools. In this case NewRelic but I am
+      sure Skylight.io and Traceview can get you the same data. In
+      this view you can sort transactions broken down by controller
+      route by usage. Anything with 1 view likely isn't pulling its
+      weight. This view also doesn't show you what received 0 requests.
+      </div>
     </section>
 
     <section class="slide">
@@ -222,25 +320,30 @@
 	download the `controller_summary.csv`</p>
       <img src="./images/NR_download.png" />
       <p>run `bundle exec rake newrelic:compare_with_routes`</p>
-      <pre>
-found 335 uniq new relic controller action hits
+      <pre>found 335 uniq new relic controller action hits
 found 562 uniq Rails routes controller action pairs
 exists in new relic, but not in routes: 0
 never accessed in new relic stats: ***
 Pipeline::DealsController#show
 Pipeline::EmailTemplatesController#show
 SubscribeButtonController#dropdown_for_deal
-SubscribeButtonController#subscribe_to_deal
 ...
 AuthorizationRulesController#graph
-AuthorizationRulesController#change
-      </pre>
+AuthorizationRulesController#change</pre>
+      <div class="slide-notes">
+        I created a gem to make this easy to check. You can download
+      the CSV of NR transactions and it can compare it to your Rails
+      routes. Finding any routes you have which are never hit. Running
+      this on old production apps always seems to find some long
+      forgotten routes.
+      </div>
     </section>
 
     <section class="slide">
       <h2>Stats Instrumentation</h2>
       <p>
         <ul>
+	  <li>No NewRelic: No Problem</li>
       	  <li>Background Events Executed: All events being triggered?</li>
 	  <li>Emails Sent: Are you still sending all your mailers?</li>
 	  <li>Views Rendered: partials, templates, and layouts</li>
@@ -252,6 +355,20 @@ AuthorizationRulesController#change
       loading in memory & never using</li>
         </ul>
       </p>
+      <div class="slide-notes">
+        Custom Stats instrumentation is very flexible. We are going to
+      look at a number of techniques to gain insight into what your
+      application is actually doing in production. I wanted to give a
+      shout out to <a href="http://codeascraft.com/category/engineering/">Etsy</a> here, as we rely heavily on StatsD, and they
+      have shared in great detail how they also use metrics to gain
+      all sorts of code and business insights.
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Stats Instrumentation: No NewRelic, No Problem</h2>
+      <pre>yo code goes here for both controller#action counts and
+      render#time counts</pre>
     </section>
 
     <section class="slide">
@@ -266,6 +383,15 @@ end
 def after_perform(*args)
   STATSD.increment "resque.completed.#{get_event_name}"
 end</code></pre>
+      <div class="slide-notes">
+	If you run a sizable Rails app you likely run background
+  jobs. Some jobs will come and go over time. It is pretty easy to
+  remove code that queues a job, while leaving around the job code and
+  related methods. It is easy to instrument how often something is
+  processed, completed, and if you like performance around that and
+  success/failures on completion. This is a simple example assuming
+  Resque, but is pretty similar for all queueing frameworks.
+      </div>
     </section>
 
     <section class="slide">
@@ -280,6 +406,13 @@ class BaseMailer < ActionMailer::Base
     super(method_name, *parameters)
   end
 end</code></pre>
+     <div class="slide-notes">
+       Mailers like background jobs and come and go. Stating every
+  mailer as it is sent lets you know when a mailer is no longer needed
+  anymore. Or perhaps which mailers you should spend more time
+  improving based on the send volume. Simple example of hooking into
+  action mailer to stat every mailer we send.
+      </div>
     </section>
 	
     <section class="slide">
@@ -298,6 +431,16 @@ class RenderTracker
     end
   end
 end</code></pre>
+     <div class="slide-notes">
+       The view layer more than anywhere else can get quickly messy
+  and hard to follow. Partials inside layouts, inside partials, and
+  ajax... Oh My... A new view gets tested or moved and people aren't
+  sure if the partial is used anywhere else. Well with activesupport
+  notifications it is easy to stats every view file as it is
+  rendered. Again beyond finding unused view code (and the related
+  helpers), you get a nice picture of what your most important view
+  componnets actually are.
+     </div>
     </section>
 
     <section class="slide">
@@ -314,6 +457,14 @@ FLATFOOT.used_views
 
 FLATFOOT.unused_views
 => ["app/views/something/_old_partial.html.erb",...</code></pre>
+      <div class="slide-notes">
+	The view tracking pattern is simple and we wanted to reuse it
+	a few places. So we have a nice little gem to quickly hook it
+	up into Rails apps. It provides some helpers to output unused
+	views by comparing the view renderings with the files you
+	actually have on disk. Making it super simple to do some view
+	layer cleanup.
+      </div>
     </section>
 
     <section class="slide">
