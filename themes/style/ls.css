@@ -398,8 +398,20 @@ a:hover, a:focus {
 }
 
 .deck-container > .header {
-    padding-top: 24px;
-    background: #FFF url('../../images/livingsocial-logo-nav.png') no-repeat center center;
+    padding-top: 8px;
+    padding-right: 18px;
+    background: #FFF;
+}
+
+.deck-container > .header > img {
+    margin-right: 0px;
+    padding-bottom: 8px;
+}
+
+ul.monorail
+{
+    list-style-type: none;
+    margin: 0px;
 }
 
 .slide .deck-before, .slide .deck-previous {

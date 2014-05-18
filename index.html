@@ -35,7 +35,7 @@
   <div class="deck-container">
 
     <div class="header">
-      &nbsp;
+      <img src="images/livingsocial-logo-nav.png" />
     </div>
     <!-- Begin slides. Just make elements with a class of slide. -->
 
@@ -57,7 +57,7 @@
 
     <section class="slide">
       <h2>Spaghetti Code</h2>
-      <table style="text-align:center; width='100%'"><tr><td>
+      <table style="margin: 0px auto;"><tr><td>
 	      <img src="./images/spagetti-code-bowl.png" />
 	</td><td>
 	      <img src="./images/spaghetti-code-spaghetti-fork.jpg" />
@@ -79,7 +79,7 @@
 
     <section class="slide">
       <h2>MonoRail</h2>
-      <ul>
+      <ul class="monorail">
         <li class="slide">
           <h3>Pre Existing</h3>
           <img src="./images/monorail.jpg" />
@@ -89,16 +89,16 @@
           <img src="./images/monorail2.jpg" />
         </li>
 	<li class="slide">
-          <h3>CRMS</h3>
-          <img src="./images/monorail3.jpg" />
-        </li>
-	<li class="slide">
-          <h3>CMS</h3>
-          <img src="./images/monorail4.jpg" />
-        </li>
-	<li class="slide">
-          <h3>Admin</h3>
-          <img src="./images/monorail5.jpg" />
+	  <table style="margin: 0px auto;"><tr><td>
+	    <h3>Admin</h3>
+            <img src="./images/monorail3.jpg" />
+	  </td><td>
+	    <h3>CMS</h3>
+            <img src="./images/monorail4.jpg" />
+	  </td><td>
+	    <h3>CRMS</h3>
+            <img src="./images/monorail5.jpg" />
+          </td></tr></table>
         </li>
 	<li class="slide">
           <h3>Next?</h3>
@@ -106,6 +106,7 @@
         </li>
       </ul>
       <div class="slide-notes">
+	#TODO fix the view
 	Yes, a large years old project. We have a Monorail! A bit of
       history. The application began as a fork of an existing project
       to quickly validate an idea. That grew into a consumer business. That
@@ -371,13 +372,39 @@ AuthorizationRulesController#change</pre>
     </section>
 
     <section class="slide">
-      <h2>Stats Instrumentation: No NewRelic, No Problem</h2>
-      <pre>yo code goes here for both controller#action counts and
-      render#time counts</pre>
+      <h2>No NewRelic, No Problem</h2>
+      <pre><code>class ApplicationController < ActionController::Base
+  before_filter :track_controller_traffic
+  around_filter :track_controller_timing
+
+  def endpoint_name
+    "#{params['controller'].gsub('/','.')}.#{params['action']}"
+  end
+
+  def track_controller_traffic
+    STATSD.increment "traffic.total"
+    STATSD.increment "traffic.#{endpoint_name}"
+  end
+
+  def track_controller_timing
+    STATSD.time("timing.#{endpoint_name}") do
+      yield
+    end
+  end
+</code></pre>
+      <div class="slide-notes">
+	We have a couple of ways we have added tracking on endpoints
+      and timing in rails. I think the simplest and cleanest example
+      was done by <a href="https://twitter.com/jwhitmire">Jeff
+    Whitmire</a>. Obviously 3rd party performance monitors give you a
+    lot more details than this, but this lets you gathes basic usage
+    and performance stats. Make it easy to See what is being used or
+    alerting off 95 percentile performance changes.
+      </div>
     </section>
 
     <section class="slide">
-      <h2>Stats Instrumentation: Background Events Executed</h2>
+      <h2>Background Events Executed</h2>
       <pre><code># Example for Resque background jobs
 STATSD = Statsd.new(host, port).tap{|sd| sd.namespace = 'app_name'}
 
@@ -400,7 +427,7 @@ end</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Stats Instrumentation: Emails Sent</h2>
+      <h2>Emails Sent</h2>
       <pre><code># Example for ActionMailer
 STATSD = Statsd.new(host, port).tap{|sd| sd.namespace = 'app_name'}
 
@@ -421,7 +448,7 @@ end</code></pre>
     </section>
 	
     <section class="slide">
-      <h2>Stats Instrumentation: Views Rendered</h2>
+      <h2>Views Rendered</h2>
       <pre><code>ActiveSupport::Notifications.subscribe /render_partial.action_view|render_template.action_view/ do |name, start, finish, id, payload| 
   RenderTracker.track_template(name, start, finish, id, payload) unless name.include?('!') 
 end
@@ -449,7 +476,7 @@ end</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Stats Instrumentation: Views Rendered</h2>
+      <h2>Views Rendered (with Flatfoot)</h2>
       <p>We made a gem for that and some helpers: <a href="https://github.com/livingsocial/flatfoot">Flatfoot</a>
       <pre><code>FLATFOOT = Flatfoot::Tracker.new(Redis.new)
 
@@ -473,7 +500,7 @@ FLATFOOT.unused_views
     </section>
 
     <section class="slide">
-      <h2>Stats Instrumentation: One Off Trackers</h2>
+      <h2>One Off Trackers</h2>
       <pre><code># Example Tracking a code path
 class HomeController < ApplicationController
   def show
@@ -501,7 +528,7 @@ end</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Stats Instrumentation: Production Performance Comparisons</h2>
+      <h2>Prod Performance Checks</h2>
       <p>shout out to <a href="https://twitter.com/ubermajestix">@ubermajestix (Tyler Montgomery)</a> for showing me the timing trick</a>
       <pre><code>STATSD = Statsd.new(host, port).tap{|sd| sd.namespace = 'app_name'}
 
@@ -531,7 +558,7 @@ end</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Stats Instrumentation: Translations Usage</h2>
+      <h2>Translations Usage</h2>
       <p>We made a gem for that <a href="https://twitter.com/the_chrismo">@Chrismo (Chris Morris)</a> built: <a href="https://github.com/livingsocial/humperdink">Humperdink</a>
       <pre><code>class KeyTracker
   def initialize(redis, key)
@@ -595,16 +622,17 @@ end</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Logs: Deprecation of caller</h2>
+      <h2>Logs: Deprecation with caller tace</h2>
       <p>
-	implement
+	<pre><code>clean_trace = Rails.backtrace_cleaner.clean(backtrace).join(',')
+Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       </p>
       <div class="slide-notes">
 	Trying to discover how the code reaches a path you never
       expect or intend it to reach anymore can be complicated. Perhaps
       a old client gem exists out there in the wild, or someone is
       linking to a url with params you thought were
-      deprecated. Whatever the case youc an log the caller inside a
+      deprecated. Whatever the case you can log the caller inside a
       path to figure out the call path that got there. If you have a
       request_id, you can then tie that back to the initial entry
       point and parameters into your application.
@@ -612,7 +640,40 @@ end</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Logs: Better with Imprint #TODO ZipKin and request_id</h2>
+	<pre><code>def deprecation_trace(backtrace = caller)
+    log_backtrace(backtrace)
+    stat_name = stat_name_line(backtrace.first)
+    STATSD.increment stat_name
+  end
+
+  def log_backtrace(backtrace)
+    #...
+  end	
+  TRACE_SUBS = [
+    [ File.expand_path(Rails.root.to_s)  , ''],
+    [ /:in `(.*)'/, '#\1' ],
+    [ '.rb'       , ''    ],
+    [ /:\d+/      , ''    ],
+  ]
+  def stat_name_line(trace_line)
+    t_line = TRACE_SUBS.inject(trace_line){ |ln, gsubs|
+    ln.gsub(*gsubs) }
+    components = t_line.split(/\W+/).reject(&:blank?).map(&:underscore)
+    components = %w[ deprecated ] + components
+    components.join('.')
+  end</code></pre>
+      <div class="slide-notes">
+	#TODO fix view style
+	Combine the deprecation logging with a good idea from <a
+    href="http://www.twitter.com/geeksam">Sam Livingston-Gray</a>,
+    which automatically builds the deprecation stat based on the
+    caller. You end up with a really useful deprecation_trace helper
+    you can use while investingating code to remove.
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Logs: Better with Imprint #TODO ZipKin and request_id (from rails)</h2>
       <p>Make your logs better with a gem from LS: 
 	<a href="https://github.com/livingsocial/imprint">Imprint</a>
 	 <ul>
@@ -654,9 +715,6 @@ end</code></pre>
 	  <li>
 	    <a href="https://github.com/danmayer/coverband">github.com/danmayer/coverband</a>
 	  </li>
-          <li>Example Output:
-	    <a href="./examples/coverage/index.html" target="blank">churn-site coverage</a>
-	  </li>
         </ul>
       </p>
       <div class="slide-notes">
@@ -688,7 +746,15 @@ end</code></pre>
       </div>
     </section>
 
-   <section class="slide">
+    <section class="slide">
+      <h2>Production Code Coverage: Coverband</h2>
+      <p>
+      Example Output:
+      <a href="./examples/coverage/index.html" target="blank">churn-site coverage</a>
+      </p>
+    </section>
+
+    <section class="slide">
       <h2>Production Code Coverage: Coverband</h2>
       <pre><code>baseline = Coverband.parse_baseline
 Coverband.configure do |config|
