@@ -106,7 +106,6 @@
         </li>
       </ul>
       <div class="slide-notes">
-	#TODO fix the view
 	Yes, a large years old project. We have a Monorail! A bit of
       history. The application began as a fork of an existing project
       to quickly validate an idea. That grew into a consumer business. That
@@ -373,6 +372,8 @@ AuthorizationRulesController#change</pre>
 
     <section class="slide">
       <h2>No NewRelic, No Problem</h2>
+      <p>thanks <a href="https://twitter.com/jwhitmire">Jeff
+    Whitmire</a></p>
       <pre><code>class ApplicationController < ActionController::Base
   before_filter :track_controller_traffic
   around_filter :track_controller_timing
@@ -640,12 +641,13 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
     </section>
 
     <section class="slide">
+      <p>this idea was introduced into our codebase by
+      <a href="http://www.twitter.com/geeksam">Sam Livingston-Gray</a></p>
 	<pre><code>def deprecation_trace(backtrace = caller)
     log_backtrace(backtrace)
     stat_name = stat_name_line(backtrace.first)
     STATSD.increment stat_name
   end
-
   def log_backtrace(backtrace)
     #...
   end	
@@ -663,7 +665,6 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
     components.join('.')
   end</code></pre>
       <div class="slide-notes">
-	#TODO fix view style
 	Combine the deprecation logging with a good idea from <a
     href="http://www.twitter.com/geeksam">Sam Livingston-Gray</a>,
     which automatically builds the deprecation stat based on the
@@ -673,7 +674,7 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Logs: Better with Imprint #TODO ZipKin and request_id (from rails)</h2>
+      <h2>Logs: Better with Imprint #TODO ZipKin</h2>
       <p>Make your logs better with a gem from LS: 
 	<a href="https://github.com/livingsocial/imprint">Imprint</a>
 	 <ul>
@@ -831,6 +832,7 @@ run ActionController::Dispatcher.new</code></pre>
       <h2>Production Code Coverage: Coverband</h2>
       <pre><code>capture example add heavily used file support</code></pre>
       <div class="slide-notes">
+	#TODO fine and capture good example on this
 	Coverband can give you interesting information and help you to
       find hotspots of code in development mode as well. If you enable
       verbose at the end of each request that coverband records it
