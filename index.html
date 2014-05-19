@@ -830,9 +830,21 @@ run ActionController::Dispatcher.new</code></pre>
 
           <section class="slide">
       <h2>Production Code Coverage: Coverband</h2>
-      <pre><code>capture example add heavily used file support</code></pre>
+      <pre><code>config.verbose = 'debug'
+coverband file usage:
+      [["/Users/danmayer/projects/pipeline/lib/facebook.rb", 6],
+      ["/Users/danmayer/projects/pipeline/app/models/deal_modules.rb", 9],
+      ...
+      ["/Users/danmayer/projects/pipeline/app/models/deal.rb", 20606],
+      ["/Users/danmayer/projects/pipeline/app/helpers/application_helper.rb",
+      43150]]
+
+file:
+  /Users/danmayer/projects/pipeline/app/helpers/application_helper.rb =>
+  [[448, 1], [202, 1],
+  ...
+  [517, 1617], [516, 38577]]</code></pre>
       <div class="slide-notes">
-	#TODO fine and capture good example on this
 	Coverband can give you interesting information and help you to
       find hotspots of code in development mode as well. If you enable
       verbose at the end of each request that coverband records it
