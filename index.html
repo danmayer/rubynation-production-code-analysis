@@ -128,15 +128,16 @@
         <ul>
 	  <li>
 	  Large teams aren't good at communicating what is no
-      longer needed
+      longer needed (both Biz & Dev)
 	  </li>
-      	  <li>AB tests, never removing a loser</li>
+      	  <li>A/B tests, never removing a loser</li>
 	  <li>One offs that are irrelevant over time</li>
 	  <li>Deprecation of old endpoints takes time</li>
 	  <li>Refactoring leaves dead code paths behind</li>
-      	  <li>A dev trying to be 'safe' & creating new methods
+      	  <li>A dev making a 'safe' & creating new methods
       opposed to altering existing methods with multiple callers</li>
 	  <li>There are tests, but it is never used in production</li>
+	  <li>Change in business direction</li>
           <li>etc...</li>
 	</ul>
       </p>
@@ -363,10 +364,41 @@ AuthorizationRulesController#change</pre>
       <div class="slide-notes">
         Custom Stats instrumentation is very flexible. We are going to
       look at a number of techniques to gain insight into what your
-      application is actually doing in production. I wanted to give a
-      shout out to <a href="http://codeascraft.com/category/engineering/">Etsy</a> here, as we rely heavily on StatsD, and they
+      application is actually doing in production.
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Stats Instrumentation: Tools</h2>
+      <p>
+        <ul>
+	  <li><a href="https://github.com/graphite-project/graphite-web">Graphite</a></li>
+      	  <li><a href="https://github.com/etsy/statsd">StatsD</a>
+	  thanks <a href="http://codeascraft.com/category/engineering/">Etsy</a></li>
+          <li><a href="https://github.com/antirez/redis">Redis</a></li>
+	</ul>
+	<pre><code>#shared code for examples
+STATSD= Statsd.new('stat.my.us', PORT).tap{|sd| sd.namespace = 'app_name'}
+
+REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
+        </code></pre>
+      </p>
+      <div class="slide-notes">
+	We use a number of tools for custom stats, that I wanted to
+      quickly mention.
+	
+       I wanted to give a shout out to Etsy here, as we rely heavily on StatsD, and they
       have shared in great detail how they also use metrics to gain
       all sorts of code and business insights.
+
+      StatsD is also extremely performant and while it can be lossy,
+      we haven't ever run into issues of adding to many metrics
+      causing our applications to slow down.
+	
+	Also, quickly here is some shared constants that will appear in
+      several of the code examples. Internally we have wrappers around
+      our Redis and StatsD usage to deal with things like app name
+      spacing, common error handling, configurations, etc.
       </div>
     </section>
 
@@ -407,8 +439,6 @@ AuthorizationRulesController#change</pre>
     <section class="slide">
       <h2>Background Events Executed</h2>
       <pre><code># Example for Resque background jobs
-STATSD = Statsd.new(host, port).tap{|sd| sd.namespace = 'app_name'}
-
 def before_perform(*args)
   STATSD.increment "resque.processed.#{get_event_name}"
 end
@@ -430,8 +460,6 @@ end</code></pre>
     <section class="slide">
       <h2>Emails Sent</h2>
       <pre><code># Example for ActionMailer
-STATSD = Statsd.new(host, port).tap{|sd| sd.namespace = 'app_name'}
-
 class BaseMailer < ActionMailer::Base
   def initialize(method_name=nil, *parameters)
     STATSD.increment "mailers.base_mailer.#{method_name}" if method_name
@@ -457,7 +485,7 @@ end
 class RenderTracker
   def self.track_template(name, start, finish, id, payload)
     if file = payload[:identifier]
-      Statsd.increment "views.#{file}"
+      STATSD.increment "views.#{file}"
     end
     if layout = payload[:layout]
       Rails.logger.info "[RenderTracker] layout: #{layout}"
@@ -479,7 +507,7 @@ end</code></pre>
     <section class="slide">
       <h2>Views Rendered (with Flatfoot)</h2>
       <p>We made a gem for that and some helpers: <a href="https://github.com/livingsocial/flatfoot">Flatfoot</a>
-      <pre><code>FLATFOOT = Flatfoot::Tracker.new(Redis.new)
+      <pre><code>FLATFOOT = Flatfoot::Tracker.new(REDIS)
 
 ActiveSupport::Notifications.subscribe /render_partial.action_view|render_template.action_view/ do |name, start, finish, id, payload|
   FLATFOOT.track_views(name, start, finish, id, payload) unless name.include?('!') 
@@ -501,6 +529,32 @@ FLATFOOT.unused_views
     </section>
 
     <section class="slide">
+      <h2>ActiveSupport::Notifications Oddity</h2>
+      <pre><code>###
+        # Annoyingly while you get full path for templates
+        # notifications only pass part of the path for layouts dropping any format info
+        # such as .html.erb or .js.erb
+        # http://edgeguides.rubyonrails.org/active_support_instrumentation.html#render_partial-action_view
+        ###
+        if layout_file = payload[:layout]
+          unless logged_views.include?(layout_file)
+            logged_views << layout_file
+            store.sadd(tracker_key, layout_file)
+          end
+        end</code></pre>
+
+      <div class="slide-notes">
+	#note cut this slide if short on time
+	I noticed something I found odd and violated the principle of
+	least surprise when working on this. Template files in the AS
+	notification include the full pathname and file
+	extensions. For layout files it does not. This was just
+	something I found odd, which tripped me up a bit so I figured
+	I would mention it.
+      </div>
+    </section>
+
+    <section class="slide">
       <h2>One Off Trackers</h2>
       <pre><code># Example Tracking a code path
 class HomeController < ApplicationController
@@ -510,9 +564,10 @@ class HomeController < ApplicationController
        STATSD.increment "deprecated.home_controller.show.xhr"
      end
     respond_to do |format|
-        format.html { STATSD.increment "deprecated.home.show.html" }
-        format.json { STATSD.increment "deprecated.home.show.json" }
-        format.mobile { STATSD.increment "deprecated.home.show.mobile" }
+        STATSD.increment "deprecated.home.show.#{format}"
+        format.html { #... }
+        format.json { #... }
+        format.mobile { #... }
     end
   end
 end</code></pre>
@@ -531,8 +586,7 @@ end</code></pre>
     <section class="slide">
       <h2>Prod Performance Checks</h2>
       <p>shout out to <a href="https://twitter.com/ubermajestix">@ubermajestix (Tyler Montgomery)</a> for showing me the timing trick</a>
-      <pre><code>STATSD = Statsd.new(host, port).tap{|sd| sd.namespace = 'app_name'}
-
+      <pre><code>
 def example_html_stripping_method
   strip_method = rand(2)&1 == 0 ? 'nokogiri' : 'strip_tags'
   desc = STATSD.time("application_helper.example_html_stripping_method.#{strip_method}") do
@@ -562,7 +616,7 @@ end</code></pre>
       <h2>Translations Usage</h2>
       <p>We made a gem for that <a href="https://twitter.com/the_chrismo">@Chrismo (Chris Morris)</a> built: <a href="https://github.com/livingsocial/humperdink">Humperdink</a>
       <pre><code>class KeyTracker
-  def initialize(redis, key)
+  def initialize(REDIS, key)
     redis_set = Humperdink::RedisDirtySet.new(:redis => redis, :key => key, :max_dirty_items => 9)
     @tracker = Humperdink::Tracker.new(redis_set, :enabled => true)
   end
@@ -623,7 +677,7 @@ end</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Logs: Deprecation with caller tace</h2>
+      <h2>Logs: Deprecation with caller trace</h2>
       <p>
 	<pre><code>clean_trace = Rails.backtrace_cleaner.clean(backtrace).join(',')
 Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
@@ -674,8 +728,8 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Logs: Better with Imprint #TODO ZipKin</h2>
-      <p>Make your logs better with a gem from LS: 
+      <h2>Logs: Better with Imprint</h2>
+      <p>Make your logs better with  
 	<a href="https://github.com/livingsocial/imprint">Imprint</a>
 	 <ul>
 	   <li>Request tracing in logs:<br/>
@@ -701,6 +755,16 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
        all inter-app service calls will pass the current requests
        trace_id as a header to the server. The api service then uses
        this id while logging its requests.
+       </div>
+    </section>
+
+           <section class="slide">
+      <h2>Logs: Imprint Example</h2>
+      <p>
+       TODO
+      </p>
+       <div class="slide-notes">
+	#TODO imprint usage example!
        </div>
     </section>
 
@@ -760,13 +824,13 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       <pre><code>baseline = Coverband.parse_baseline
 Coverband.configure do |config|
   config.root              = Dir.pwd
-  config.redis   = Redis.new(:host => 'redis.host.com')
+  config.redis   = REDIS
   config.coverage_baseline = baseline
   config.root_paths        = ['/app/']
   config.ignore            = ['vendor']
   config.startup_delay = Rails.env.production? ? 15 : 1
   config.percentage    = Rails.env.production? ? 10.0 : 95.0
-  config.stats         = Statsd.new('stat.my.com', 25)
+  config.stats         = STATSD
   config.verbose       = Rails.env.production? ? false: true
 end</code></pre>
       <div class="slide-notes">
@@ -828,7 +892,7 @@ run ActionController::Dispatcher.new</code></pre>
       </div>
     </section>
 
-          <section class="slide">
+    <section class="slide">
       <h2>Production Code Coverage: Coverband</h2>
       <pre><code>config.verbose = 'debug'
 coverband file usage:
@@ -854,6 +918,18 @@ file:
       </div>
     </section>
 
+    <section class="slide ls">
+      <h2>Gems</h2>
+        <ul>
+	  <li><a href="https://github.com/livingsocial/newrelic_route_check">newrelic_route_check</a></li>
+	  <li><a href="https://github.com/livingsocial/flatfoot">Flatfoot</a></li>
+	  <li><a href="https://github.com/livingsocial/humperdink">Humperdink</a></li>
+	  <li><a href="https://github.com/livingsocial/imprint">Imprint</a></li>
+	  <li><a href="https://github.com/danmayer/coverband">Coverband</a></li>
+        </ul>
+
+    </section>
+      
     <section class="slide ls">
       <h1>Thanks</h1>
       <p>
