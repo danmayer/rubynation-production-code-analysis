@@ -918,7 +918,7 @@ file:
       </div>
     </section>
 
-    <section class="slide ls">
+    <section class="slide">
       <h2>Gems</h2>
         <ul>
 	  <li><a href="https://github.com/livingsocial/newrelic_route_check">newrelic_route_check</a></li>
@@ -927,7 +927,69 @@ file:
 	  <li><a href="https://github.com/livingsocial/imprint">Imprint</a></li>
 	  <li><a href="https://github.com/danmayer/coverband">Coverband</a></li>
         </ul>
+      <div class="slide-notes">
+	Here is a list of the gems, I mentioned during the talk. These
+      are all open source released by various LivingSocial engineers.
+      </div>
+    </section>
 
+    <section class="slide">
+      <h2>Other Useful Gems</h2>
+        <ul>
+	  <li>many things from <a href="https://twitter.com/tmm1">Aman Gupta (@tmm1)<a/></li>
+	  <ul>
+  	    <li>Ruby Profilers
+	    <ul>
+	      <li>
+	       <a href="https://github.com/tmm1/perftools.rb">Perftools.rb</a>
+      and related <a
+      href="https://github.com/bhb/rack-perftools_profiler">rack
+      preftools from @bhb</a> (Ruby < 2.1)</li>
+              <li><a href="https://github.com/tmm1/stackprof">Modern
+      Replacement for Perftools.rb</a> (Ruby >= 2.1)</li>
+	    </ul>
+	    <li><a href="https://github.com/tmm1/rbtrace">rbtrace</a>
+      (like strace for Ruby)</li>
+            <li><a href="https://github.com/tmm1/rblineprof">rblineprof</a></li>
+            <li><a
+      href="https://github.com/rack/rack/commit/f791197f501776480a67211afbca0b32c628b2c9">Rack
+      Warmup</a> to avoid performance hits on initial requests</li>
+	    <li><a href="http://tmm1.net/ruby21-rgengc/">A history of Ruby's GC</a></li>
+            <li><a href="https://github.com/tmm1/gctools">gctools</a>
+      out of band GC tools optimized for Ruby 2.1</li>
+	  </ul>
+	  <li><a href="https://twitter.com/srawlins">Sam Rawlins
+      (@srawlins)</a> awesome GC work.</li>
+	  <ul>
+      <li><a
+      href="https://github.com/srawlins/allocation_stats">AllocationStats</a>
+      GC tooling</li>
+      <li><a href="https://github.com/srawlins/rack-allocation_stats">rack-allocation_stats</a> making GC tooling even
+      more accessible</li>
+      <li><a
+      href="http://www.confreaks.com/videos/3272-mwrc-new-ruby-2-1-awesomeness-pro-object-allocation-tracing">Ruby
+      2.1 Awesomeness: Pro Object Allocation Tracing</a> (mtnwest ruby
+      talk)</li>
+          </ul>
+	  <li><a
+      href="https://github.com/simeonwillbanks/busted">busted</a> find
+      method cache invalidation by <a href="https://github.com/simeonwillbanks">Simeon Willbanks</a></li>
+	  <li><a
+      href="https://github.com/change/method_profiler">MethodProfiler</a>
+      from Change.org</li>
+          <li><a
+      href="http://avsej.net/2012/systemtap-and-ruby-20/">Ruby 2.0 and
+      Systemtap</a></li>
+        </ul>
+	
+      <div class="slide-notes">
+	Anything by by Aman Gupta is generally awesome. Not only has
+      he released amazing gems and tools. He is now on the frontline
+      improving the Ruby VM to help it provide valuable runtime data
+      back to clients.
+
+	#TODO finish this
+      </div>
     </section>
       
     <section class="slide ls">
