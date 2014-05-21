@@ -469,3 +469,11 @@ ul.monorail
 .slide-notes {
     display:none;
 }
+
+span.img-src {
+    font-size: 13px;
+}
+
+span.img-src a {
+    font-size: 13px;
+}

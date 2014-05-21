@@ -58,9 +58,15 @@
     <section class="slide">
       <h2>Spaghetti Code</h2>
       <table style="margin: 0px auto;"><tr><td>
-	      <img src="./images/spagetti-code-bowl.png" />
+	  <img src="./images/spagetti-code-bowl.png" />
+	  <span class="img-src">-
+	    <a href="http://overloadstudios.blogspot.com/2010/11/debugging-spaghetti-code.html">overload studios</a>
+	  </span>
 	</td><td>
-	      <img src="./images/spaghetti-code-spaghetti-fork.jpg" />
+	  <img src="./images/spaghetti-code-spaghetti-fork.jpg" />
+	  <span class="img-src">-
+	    <a href="http://www.troll.me/2011/12/17/spaghetti-fork/spaghetti-code-spaghetti-fork/">troll.me</a>
+	  </span>
       </td></tr></table>
       
       <div class="slide-notes">
@@ -71,9 +77,6 @@
       how a project can reach a point where there is over 200KLOC that
       can be removed. Then I can explain some processes to help find
       and remove unnessary complexity.
-	spaghetti-code-bowl:
-      http://overloadstudios.blogspot.com/2010/11/debugging-spaghetti-code.html
-	spaghetti-fork: http://www.troll.me/2011/12/17/spaghetti-fork/spaghetti-code-spaghetti-fork/
       </div>
     </section>
 
@@ -101,7 +104,7 @@
           </td></tr></table>
         </li>
 	<li class="slide">
-          <h3>Next?</h3>
+          <h3><a href="http://www.thesimpsons.com/">The Simpsons</a></h3>
           <img src="./images/monorail6.jpg" />
         </li>
       </ul>
@@ -117,8 +120,9 @@
       code, but after each split they have less responsibility. Which
       code is needed for the smaller slice of responsibilities, what
       can be removed from the parent app? Looking production runtime
-      can tell you. 
-	images: simpsons
+      can tell you.
+
+	These images I obviously got from the Simpsons.
       </div>
     </section>
 
@@ -137,7 +141,6 @@
       	  <li>A dev making a 'safe' & creating new methods
       opposed to altering existing methods with multiple callers</li>
 	  <li>There are tests, but it is never used in production</li>
-	  <li>Change in business direction</li>
           <li>etc...</li>
 	</ul>
       </p>
@@ -170,6 +173,9 @@
       sucks" by Peter Welch. In it he makes the analogy of a team
       building a bridge, not knowing what they are doing building half
       suspension and half support.
+
+	In the article he jokingly states, "all code is bad". That
+      must mean...
       </div>
     </section>
 
@@ -184,10 +190,9 @@
 	  <li>is easier to adapt to new requirements</li>
       </ul>
       <div class="slide-notes">
-	Obviously, a bit jokingly that article states that "all code
-      is bad". Obviously if the code is doing work it has some value,
-      but I don't think I have to spend time on why having less code
-      and simpler systems is better.
+      ...Less code is better. Obviously if the code is doing work it has some value,
+      but I don't think I have to spend much time time on why having less code
+      & simpler systems is better.
       </div>
     </section>
 
@@ -201,9 +206,14 @@
 	  <li>Keep Only the Code Needed, No More</li>
       </ul>
       <div class="slide-notes">
+	So if the problem is all code is bad and we agree less code is better, the
+      solution is clean up dead code. Keeping only the code need.
+	
 	We can make our projects better by only working on the code we
       need. The code that is actively adding value to our
-      business.
+      business and users.
+
+	Sounds good, let's delete all the code... Or some of it, which code...
       </div>
     </section>
 
@@ -647,6 +657,30 @@ end</code></pre>
     <section class="slide">
       <h2>Logs</h2>
       <p>
+        <img src="images/logallthethings.png" />
+        <span class="img-src">-
+	  <a href="http://icanhas.cheezburger.com/">icanhas.cheezburger.com</a>
+	</span>
+      </p>
+      <div class="slide-notes">
+	That covers various custom loggers so let's talk a little bit
+      about logs.
+	
+	 Your application logs are a mine of information just waiting
+      to help you out. When you have multiple applications and you are
+      trying to refactor or remove old endpoints knowing, which
+      clients and versions are using the application can be critical.
+
+      Again if you don't have NR or 3rd party
+      performance tools. You can get great rollups of performance for
+      controllers and actions with Kibana, Splunk, or other log
+      querying tools.
+      </div>
+    </section>
+      
+    <section class="slide">
+      <h2>Logs</h2>
+      <p>
         <ul>
 	  <li>Logs need to be searchable, real time is best.
 	  (ElasticSearch/Kibana, Splunk, Hadoop)</li>
@@ -659,12 +693,6 @@ end</code></pre>
         </ul>
       </p>
       <div class="slide-notes">
-	Your application logs are a mine of information just waiting
-      to help you out. Again if you don't have NR or 3rd party
-      performance tools. You can get great rollups of performance for
-      controllers and actions with Kibana, Splunk, or other log
-      querying tools.
-
 	You can implement render_tracking, translation_key tracking,
       and most of the other mention systems just by logging data in
       querable formats to your logs and crafting the correct queries.
@@ -744,6 +772,12 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
 	 </ul>
       </p>
        <div class="slide-notes">
+	 	 One place I turn to logs is to know what is happening on a
+      the system between applications or components. When deprecating
+      old code or splitting up an app tracking down find edge usage
+      can be tricky. Logs can be particularly useful for this level of
+      information. Imprint helps trace across apps and components.
+	 
 	 Imprint builds on ideas from Twitter. Twitter pushed ZipKin,
       but most of the tooling is in the Scala world. Rails also
       provides a request_id which IMPRINT can use. Imprint makes it
@@ -785,10 +819,14 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       <div class="slide-notes">
 	Most of the above monitors focus on a particular piece of the
       puzzle. It takes effort to setup ahead of time and then time to
-      collect and analyze the data. It seemed like a pattern could be
+      collect and analyze the data.
+
+	It seemed like a pattern could be
       abstracted, which would be more generally useful. Really I
       wanted to know how often a given line of code was being run in
-      production. Ruby VM tooling around this area keeps getting
+      production.
+
+	Ruby VM tooling around this area keeps getting
       better, while Coverage make this easy to do for tests, it has
       some bugs that prevent it being used for production. I ended up
       working with set_trace_fun and sampling a percentage of requests
@@ -823,15 +861,16 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       <h2>Production Code Coverage: Coverband</h2>
       <pre><code>baseline = Coverband.parse_baseline
 Coverband.configure do |config|
-  config.root              = Dir.pwd
-  config.redis   = REDIS
+  config.root  = Dir.pwd
+  config.redis = REDIS
   config.coverage_baseline = baseline
-  config.root_paths        = ['/app/']
-  config.ignore            = ['vendor']
+  config.root_paths = ['/app/']
+  config.ignore = ['vendor']
   config.startup_delay = Rails.env.production? ? 15 : 1
-  config.percentage    = Rails.env.production? ? 10.0 : 95.0
-  config.stats         = STATSD
-  config.verbose       = Rails.env.production? ? false: true
+  config.percentage = Rails.env.production? ? 10.0 : 95.0
+  config.stats = STATSD
+  config.verbose = Rails.env.production? ? false : true
+  config.logger = Rails.logger
 end</code></pre>
       <div class="slide-notes">
 	Coverband works as rack middleware. It decides to sample or
@@ -945,8 +984,8 @@ file:
       and related <a
       href="https://github.com/bhb/rack-perftools_profiler">rack
       preftools from @bhb</a> (Ruby < 2.1)</li>
-              <li><a href="https://github.com/tmm1/stackprof">Modern
-      Replacement for Perftools.rb</a> (Ruby >= 2.1)</li>
+              <li><a href="https://github.com/tmm1/stackprof">Stackprof</a>Modern
+      Replacement for Perftools.rb (Ruby >= 2.1)</li>
 	    </ul>
 	    <li><a href="https://github.com/tmm1/rbtrace">rbtrace</a>
       (like strace for Ruby)</li>
@@ -972,23 +1011,46 @@ file:
       talk)</li>
           </ul>
 	  <li><a
-      href="https://github.com/simeonwillbanks/busted">busted</a> find
-      method cache invalidation by <a href="https://github.com/simeonwillbanks">Simeon Willbanks</a></li>
-	  <li><a
       href="https://github.com/change/method_profiler">MethodProfiler</a>
       from Change.org</li>
+          <li><a
+      href="https://github.com/simeonwillbanks/busted">busted</a> find
+      method cache invalidation by <a href="https://github.com/simeonwillbanks">Simeon Willbanks</a></li>
           <li><a
       href="http://avsej.net/2012/systemtap-and-ruby-20/">Ruby 2.0 and
       Systemtap</a></li>
         </ul>
 	
       <div class="slide-notes">
+	While I focused on code analysis to understand what a system
+	is doing and finding unused code paths. Obviously there are a
+	lot of other amazing production code analysis tools. Ruby
+	historically hasn't been very good it has been improving.
+	We have members of the community that are
+	working on making better.
+
+	So I wanted to point out some other gems and tools that can
+	either help you understand what is going on with your system
+	or with the performance of the code as it runs. Some of these
+	tools can be used in production while others are a probably
+	best in development only until the tooling gets better.
+	
 	Anything by by Aman Gupta is generally awesome. Not only has
       he released amazing gems and tools. He is now on the frontline
       improving the Ruby VM to help it provide valuable runtime data
       back to clients.
 
-	#TODO finish this
+	Sam Rawlins has been doing amazing work related to GC tools to
+      help you understand what is going on on systems. I recommend his
+      MtnWestRuby talk
+
+	change.org has related a interesting MethodProfiler tool.
+
+	Simeon Willbanks has a interesting tool that will collect
+      method cache invalidations for Ruby 2.1
+
+	A lot of great work is going on to help give us better
+      insights into what is happening with our code on production.
       </div>
     </section>
       
@@ -1010,6 +1072,13 @@ file:
 	  </li>
         </ul>
       </p>
+      <div class="slide-notes">
+	I wanted to say thanks to LivingSocial who lets me work some
+      of these tools and sends me around to some conferences. Also, if
+      you think any of this is intersting we are hiring.
+
+	Thanks for listening, hope you found some of this interesting.
+      </div>
     </section>
 
     <!-- End slides. -->
