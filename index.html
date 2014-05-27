@@ -68,7 +68,6 @@
 	    <a href="http://www.troll.me/2011/12/17/spaghetti-fork/spaghetti-code-spaghetti-fork/">troll.me</a>
 	  </span>
       </td></tr></table>
-      
       <div class="slide-notes">
 	We have all seen spaghetti code. It is hard to understand and
       follow all the code paths. It is difficult to change and
@@ -80,7 +79,7 @@
       First I want to briefly explain
       how a project can reach a point where there is over 200KLOC that
       can be removed. Then I can explain some processes to help find
-      and remove unnessary complexity.
+      and remove unnecessary complexity.
       </div>
     </section>
 
@@ -137,7 +136,7 @@
       can be removed from the parent or app?
 
 	If you keep going like this without ever cleanup up the apps
-	no longer neccesary code. You will eventually crash.
+	no longer necessary code. You will eventually crash.
 	
 	Looking production runtime can help tell you.
 
@@ -167,7 +166,7 @@
 	Beyond Monorails, dead code can slip into a system many
       ways. I am not really going into all the details, but suffice to
       say. Every system I have worked on grows and at some point has
-      unnessary code tucked away into the corners at some
+      unnecessary code tucked away into the corners at some
       point. Features that don't quite justify their UI complexity,
       pivoting away from some direction, either for business or
       development reasons. 
@@ -299,7 +298,7 @@
       <div class="slide-notes">
 	Hopefully that explains a bit about how one can end up in a
       place where they need data to help them know what is going on
-      with thier systems.
+      with their systems.
 	
 	I am going to go through some examples of processes we have
       used to find unused code. From very simple methods, to more
@@ -315,7 +314,7 @@
     <section class="slide">
 	<h2>Street Cred</h2>
 	<img src="./images/deals_loc.png" />
-	<p>(grown up marketing speak: "steet cred" => "social
+	<p>(grown up marketing speak: "street cred" => "social
 	proof")</p>
       <div class="slide-notes">
 	Just to show that this isn't some idea, these are processes we
@@ -335,7 +334,7 @@
         <div class="slide-notes">
 	  Also, wanted to point out getting code bases into shape. Is
 	really a team effort. As a team we celebrate our code
-	improvements. Poitning out and cheering on particularly good commits, faster tests,
+	improvements. Pointing out and cheering on particularly good commits, faster tests,
 	code deletion.
 
 	  Linking to little victories in campfire all the
@@ -479,7 +478,7 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
       and timing in Rails. I think the simplest and cleanest example
       was done by <a href="https://twitter.com/jwhitmire">Jeff
     Whitmire</a>. Obviously 3rd party performance monitors give you a
-    lot more details than this, but this lets you gathes basic usage
+    lot more details than this, but this lets you collect basic usage
     and performance stats. Make it easy to See what is being used or
       to configure alerts based on percentile performance changes.
       </div>
@@ -557,11 +556,11 @@ end</code></pre>
   sure if the partial is used anywhere else. AB tests leave views
   behind.
 
-       With activesupport
+       With ActiveSupport
   notifications it is easy to stats every view file as it is
   rendered. Again beyond finding unused view code (and the related
   helpers), you get a nice picture of what your most important view
-  componnets actually are.
+  components actually are.
 
        This shows you could either stat, or log which views are being used.
      </div>
@@ -682,7 +681,7 @@ end</code></pre>
 	One off trackers, aren't only useful for finding unused
   code. It can be a great way to launch performance enhancements.
 
-	To gether data on the performance of two implmentations with
+	To gather data on the performance of two implementations with
   production data sets. Simply split
   the code between old and new while sending the timing info to
   StatsD. Gather performance information against actual production
@@ -763,7 +762,7 @@ end</code></pre>
 	  <li>If you have multiple apps that communicate they should
       be in the same system.</li>
 	  <li>All your logs should be in one place 
-	  (cron, nginx access/error, background jobs, rails logs)</li>
+	  (cron, Nginx access/error, background jobs, rails logs)</li>
           <li>Try to standardize log format: important keys / variables
       across systems</li>
         </ul>
@@ -771,7 +770,7 @@ end</code></pre>
       <div class="slide-notes">
 	You can implement render_tracking, translation_key tracking,
       and most of the other mentioned systems just by logging data in
-      querable formats to your logs and crafting the correct queries.
+      query-able formats to your logs and crafting the correct queries.
 
 	Logs can go deep when you are digging into specific problems like
       debugging exceptions.
@@ -829,7 +828,7 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
     href="http://www.twitter.com/geeksam">Sam Livingston-Gray</a>,
     which automatically builds the deprecation stat based on the
     caller. You end up with a really useful deprecation_trace helper
-    you can use while investingating code to remove.
+    you can use while investigating code to remove.
       </div>
     </section>
 
@@ -859,7 +858,7 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
 	 Imprint builds on ideas from Twitter. Twitter created ZipKin,
       but most of the tooling is in the Scala world. Rails also
       provides a request_id which IMPRINT can use. Imprint makes it
-      easy to capture a request trace and help propigate it through
+      easy to capture a request trace and help propagate it through
       multiple systems. The gem helps simplify the process to integrate it into
       multiple tools.
 
@@ -912,17 +911,17 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       working with set_trace_fun and sampling a percentage of requests
       to get some great data.
 
-	Unfortunately, the perfomance hit is pretty large for big
+	Unfortunately, the performance hit is pretty large for big
       applications. I am running this on Monorail size apps with about
       1% of requests being sampled. While I can run 60-90% of requests
-      small sinatra apps without noticing much of a performance
+      small Sinatra apps without noticing much of a performance
       impact.
 
 	I am currently in progress with a native c extension which
       should significantly improve performance. I also think that
       using a sampling profiler based on time opposed to sampling full
       requests, which was built into Ruby 2.1, that I should be able
-      to gather this data in production without a noticiable impact on
+      to gather this data in production without a noticeable impact on
       application performance. If anyone has strong C skills and is
       interested in helping out, I am definitely in need of some help
       in this area. 
@@ -960,7 +959,7 @@ end</code></pre>
 	
 	To configure coverband you can either put this config block
       where necessary of place it in `config/coverband.rb` which it
-      gets picked up when you call Coverband.confgure.
+      gets picked up when you call Coverband.configure.
 
 	`Coverband.parse_baseline` tells Coverband where to find a
       baseline recording of code coverage just from loading the
@@ -1154,7 +1153,7 @@ file:
       <div class="slide-notes">
 	I wanted to say thanks to LivingSocial who lets me work some
       of these tools and sends me around to some conferences. Also, if
-      you think any of this is intersting we are hiring.
+      you think any of this is interesting we are hiring.
 
 	Thanks for listening, hope you found some of this interesting.
       </div>
@@ -1185,6 +1184,8 @@ file:
 <!-- Required JS files. -->
 <script src="jquery.min.js"></script>
 <script src="core/deck.core.js"></script>
+<!-- include the below to do presentation mode locally -->
+<script src="core/deck.remote.js"></script>
 
 <!-- Extension JS files. Add or remove as needed. -->
 <script src="extensions/menu/deck.menu.js"></script>
@@ -1194,11 +1195,11 @@ file:
 <script src="extensions/scale/deck.scale.js"></script>
 
 <!-- Initialize the deck. You can put this in an external file if desired. -->
+<script>hljs.initHighlightingOnLoad();</script>
 <script>
   $(function() {
     $.deck('.slide');
   });
 </script>
-<script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>
