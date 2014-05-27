@@ -88,7 +88,7 @@ the deck container.
       this.sendStatus = function() {};
       },
     sendStatus: function() {
-      var notes = $('.slide-notes', $[deck]('getSlide', this.currentSlide)).text();
+      var notes = $('.slide-notes', $[deck]('getSlide', this.currentSlide)).html();
       this.myWebSocket.send(JSON.stringify({"type":"status", "data": { "currentSlide": this.currentSlide, "notes":  notes } }));
       }
     };

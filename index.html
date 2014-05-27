@@ -72,10 +72,10 @@
 	We have all seen spaghetti code. It is hard to understand and
       follow all the code paths. It is difficult to change and
 	maintain.
-
+        <br/><br/>
 	As projects grow and age it is very difficult to entirely
-      avoid. Untangling it is hard but code analysis the code can help.
-
+      avoid. Untangling it is hard but code analysis can help.
+	<br/><br/>
       First I want to briefly explain
       how a project can reach a point where there is over 200KLOC that
       can be removed. Then I can explain some processes to help find
@@ -89,10 +89,23 @@
         <li class="slide">
           <h3>Pre Existing</h3>
           <img src="./images/monorail.jpg" />
+	  <div class="slide-notes">
+	    	The application began as a fork of an existing project to
+	quickly validate an idea.
+	  </div>
         </li>
         <li class="slide">
           <h3>Consumer</h3>
           <img src="./images/monorail2.jpg" />
+          <div class="slide-notes">
+	    That grew into a consumer business, which is what most
+      people know as LivingSocial today.
+	    <br/><br/>
+	    That app grew a lot and had many teams working to extend its
+      functionality.
+	    <br/><br/>
+	Eventually it was forked into multiple other applications.
+	  </div>
         </li>
 	<li class="slide">
 	  <table style="margin: 0px auto;"><tr><td>
@@ -105,42 +118,33 @@
 	    <h3>CRMS</h3>
             <img src="./images/monorail5.jpg" />
           </td></tr></table>
+          <div class="slide-notes">
+	   This means all these apps share some of the same
+      code, but after each split they have less responsibility.
+	    <br/><br/>
+	Which code is needed for the smaller slice of responsibilities, what
+      can be removed from the parent or app?
+	  </div>
         </li>
 	<li class="slide">
           <h3><a href="http://www.thesimpsons.com/">The Simpsons</a></h3>
           <img src="./images/monorail6.jpg" />
+	  <div class="slide-notes">
+	    If you keep going like this without ever cleaning up the apps
+	no longer necessary code. You will eventually crash.
+	    <br/><br/>
+	Looking production runtime can help tell you.
+	    <br/><br/>
+	(images obviously taken from the Simpsons)
+	  </div>
         </li>
       </ul>
       <div class="slide-notes">
 	Yes, we have a MonoRail app. A very large app that has grown
       for years.
-
+	<br/><br/>
 	Actually we have more than one, how did we get here. A bit of
  history.
-
-	The application began as a fork of an existing project to
-	quickly validate an idea.
-	
-	That grew into a consumer business, which is what most people
-      know as LivingSocial today.
-
-	That app grew a lot and had many teams working to extend its
-      functionality.
-
-	Eventually it was forked into multiple other applications.
-	
-      This means all these apps share some of the same
-      code, but after each split they have less responsibility.
-
-	Which code is needed for the smaller slice of responsibilities, what
-      can be removed from the parent or app?
-
-	If you keep going like this without ever cleanup up the apps
-	no longer necessary code. You will eventually crash.
-	
-	Looking production runtime can help tell you.
-
-	(images obviously taken from the Simpsons)
       </div>
     </section>
 
@@ -164,10 +168,14 @@
       </p>
       <div class="slide-notes">
 	Beyond Monorails, dead code can slip into a system many
-      ways. I am not really going into all the details, but suffice to
+      ways.
+	<br/><br/>
+	I am not really going into all the details, but suffice to
       say. Every system I have worked on grows and at some point has
       unnecessary code tucked away into the corners at some
-      point. Features that don't quite justify their UI complexity,
+      point.
+	<br/><br/>
+	Features that don't quite justify their UI complexity,
       pivoting away from some direction, either for business or
       development reasons. 
       </div>
@@ -189,11 +197,11 @@
       <div class="slide-notes">
 	Their is a pretty hilarious article titled "programming still
       sucks" by Peter Welch, recently making it around the net.
-
+	<br/><br/>
 	In it he makes the analogy of a team
       building a bridge, not knowing what they are doing building half
       suspension and half support bride.
-
+	<br/><br/>
 	In the article he jokingly states, "all code is bad". That
       must mean...
       </div>
@@ -229,11 +237,11 @@
       <div class="slide-notes">
 	So if the problem is all code is bad and we agree less code is better, the
       solution is clean up dead code. Keeping only the code need.
-	
+	<br/><br/>
 	We can make our projects better by only working what we
       need. The code that is actively adding value to our
       business and users.
-
+	<br/><br/>
 	Sounds good, let's delete all the code... Or some of it, which code...
       </div>
     </section>
@@ -275,9 +283,9 @@
       <div class="slide-notes">
 	What really caught my attention in the article was this
       specific line.
-
+	<br/><br/>
 	Nobody knows which parts.
-	
+	<br/><br/>
 	We don't have to settle for guessing, we can solve this
       problem... We can use data.
       </div>
@@ -299,7 +307,7 @@
 	Hopefully that explains a bit about how one can end up in a
       place where they need data to help them know what is going on
       with their systems.
-	
+	<br/><br/>
 	I am going to go through some examples of processes we have
       used to find unused code. From very simple methods, to more
       complicated processes. Also, note if you run `rake stats` on a
@@ -336,7 +344,7 @@
 	really a team effort. As a team we celebrate our code
 	improvements. Pointing out and cheering on particularly good commits, faster tests,
 	code deletion.
-
+	  <br/><br/>
 	  Linking to little victories in campfire all the
 	way.
 	</div>
@@ -350,13 +358,15 @@
       <div class="slide-notes">
 	One of the easiest ways to gain insight into what code is
       being used in production is checking with any of the 3rd party
-      performance monitoring tools. In this case NewRelic but I am
+      performance monitoring tools.
+	<br/><br/>
+	In this case NewRelic but I am
       sure Skylight.io and Traceview can get you the same data. In
       this view you can sort transactions broken down by controller
       route by usage. Anything with 1 view in the last seven days likely isn't pulling its
       weight. It might be worth discussing the cost of those features
       with the business team.
-
+	<br/><br/>
 	This view also doesn't show you what received 0 requests.
       </div>
     </section>
@@ -383,7 +393,7 @@ AuthorizationRulesController#change</pre>
         I created a gem to make this easy to check. You can download
       the CSV of NR transactions and it can compare it to your Rails
       routes. Finding any routes you have which are never hit.
-
+	<br/><br/>
 	Running this on old production apps always seems to find some long
       forgotten routes.
       </div>
@@ -430,19 +440,19 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
       <div class="slide-notes">
 	We use a number of tools for custom stats, that I wanted to
       quickly mention.
-	
+	<br/><br/>
        I wanted to give a shout out to Etsy here, as we rely heavily on StatsD, and they
       have shared in great detail how they also use metrics to gain
       all sorts of code and business insights.
-
+	<br/><br/>
       StatsD is also extremely performant and while it can be lossy,
       we haven't ever run into performance issues while adding many metrics.
-	
+	<br/><br/>
 	Also, quickly here is some shared constants that will appear in
       several of the examples. Internally we have wrappers around
       our Redis and StatsD usage to deal with things like app name
       spacing, common error handling, configurations, etc.
-
+	<br/><br/>
 	In these examples I am just using Redis and StatsD directly.
       </div>
     </section>
@@ -473,7 +483,7 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
       <div class="slide-notes">
 	First up, not using NewRelic or another performance tool? No
     problem.
-	
+	<br/><br/>
 	We have a couple of ways we have added tracking on endpoints
       and timing in Rails. I think the simplest and cleanest example
       was done by <a href="https://twitter.com/jwhitmire">Jeff
@@ -497,13 +507,13 @@ end</code></pre>
       <div class="slide-notes">
 	If you run a sizable Rails app you likely run background
   jobs.
-
+	<br/><br/>
 	Some jobs will come and go over time. It is pretty easy to
   remove code that queues a job, while leaving around the job code and
   related methods. It is easy to instrument how often something is
   processed, completed. With a bit more work you can record execution time around jobs or
   success/failures on completion.
-
+	<br/><br/>
 	This is a simple example assuming Resque, but is pretty similar for all queueing frameworks.
       </div>
     </section>
@@ -522,7 +532,7 @@ end</code></pre>
        Mailers like background jobs and come and go. Stating every
   mailer as it is sent lets you know when a mailer is no longer
       needed.
-
+       <br/><br/>
        Or perhaps which mailers you should spend more time
   improving based on the send volume. This is a simple example of hooking into
   action mailer to stat every mailer sent.
@@ -548,20 +558,19 @@ end</code></pre>
      <div class="slide-notes">
        The view layer more than anywhere else can get quickly messy
   and hard to follow.
-
+       <br/><br/>
        Partials inside layouts, inside partials, and
   ajax... Oh My.
-
+       <br/><br/>
        A new view gets tested or moved and people aren't
   sure if the partial is used anywhere else. AB tests leave views
   behind.
-
-       With ActiveSupport
-  notifications it is easy to stats every view file as it is
+       <br/><br/>
+       With ActiveSupport notifications it is easy to stats every view file as it is
   rendered. Again beyond finding unused view code (and the related
   helpers), you get a nice picture of what your most important view
   components actually are.
-
+       <br/><br/>
        This shows you could either stat, or log which views are being used.
      </div>
     </section>
@@ -586,7 +595,7 @@ FLATFOOT.unused_views
 	up into Rails apps. It provides some helpers to output unused
 	views by comparing the view renderings with the files you
 	actually have on disk.
-
+	<br/><br/>
 	Making it super simple to do dig into view
 	layer cleanup, and all the related helpers and modules that go
 	with it.
@@ -612,10 +621,10 @@ FLATFOOT.unused_views
 	#note cut this slide if short on time
 	I did want to briefly mention a little ActiveSupport oddity I
 	found.
-	
+	<br/><br/>
 	ActiveSupport violated the principle of
 	least surprise I felt as I was  working on this.
-
+	<br/><br/>
 	Template files in the notifications include the full pathname and file
 	extensions. For layout files it does not. It tripped me up a bit so I figured
 	I would mention it. Flatfoot has some methods to help layouts
@@ -643,11 +652,11 @@ end</code></pre>
       <div class="slide-notes">
 	One problem with tracking only controllers and actions, is that
       the often serve multiple formats and request paths.
-
+	<br/><br/>
 	For that,
       one of trackers can be useful. Tracking format specific
       endpoints, conditional paths, and bit of code really.
-
+	<br/><br/>
 	We use the deprecated namespace in
       our apps to track helper methods, models, views. It
       also provides a quick way to jump into code cleanup. Grep the
@@ -674,13 +683,13 @@ end</code></pre>
       <div class="slide-notes">
 	This isn't actually related to finding unused code, but I like
       this trick so much I wanted to share it.
-	
+	<br/><br/>
 	Shout out to Tyler Montgomery, who checked this great idea
   into our git one day.
-	
+	<br/><br/>
 	One off trackers, aren't only useful for finding unused
   code. It can be a great way to launch performance enhancements.
-
+	<br/><br/>
 	To gather data on the performance of two implementations with
   production data sets. Simply split
   the code between old and new while sending the timing info to
@@ -714,16 +723,16 @@ end</code></pre>
 	Another piece of an application that can easily become a out
     of sync is translation keys. Over time, it is hard to know which
     translations are still in use.
-
+	<br/><br/>
 	Translation keys
     end up causing a not fun memory bloat for production rails
     processes. That unchecked over time can be quite costly for
     overall performance.
-
+	<br/><br/>
 	Chris Morris built Humperdink which has a
     number of uses, but is particularly well suited to help track down
     no longer used translation keys.
-
+	<br/><br/>
 	Check out the gem for more details on how
     to track translations, but the above shows a bit of the basics.
       </div>
@@ -740,12 +749,12 @@ end</code></pre>
       <div class="slide-notes">
 	That covers various custom stats so let's talk a little bit
       about logs.
-	
+	<br/><br/>
 	 Your application logs are a mine of information just waiting
       to help you out. When you have multiple applications and you are
       trying to refactor or remove old endpoints knowing, which
       clients and versions are using the application can be critical.
-
+	<br/><br/>
       Again if you don't have NR or 3rd party
       performance tools. You can get great rollups of performance for
       controllers and actions with Kibana, Splunk, or other log
@@ -771,10 +780,10 @@ end</code></pre>
 	You can implement render_tracking, translation_key tracking,
       and most of the other mentioned systems just by logging data in
       query-able formats to your logs and crafting the correct queries.
-
+	<br/><br/>
 	Logs can go deep when you are digging into specific problems like
       debugging exceptions.
-
+	<br/><br/>
 	All your exceptions should link you back
       to the original logs related to the request causing the
       exceptions.
@@ -792,7 +801,9 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       expect or intend it to reach anymore can be complicated. Perhaps
       a old client gem exists out there in the wild, or someone is
       linking to a url with params you thought were
-      deprecated. Whatever the case you can log the caller inside a
+      deprecated.
+	 <br/><br/>
+	Whatever the case you can log the caller inside a
       path to figure out the call path that got there. If you have a
       request_id, you can then tie that back to the initial entry
       point and parameters into your application.
@@ -854,14 +865,14 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       old code or splitting up an app tracking down find edge usage
       can be tricky. Logs can be particularly useful for this level of
       information. Imprint helps trace across apps and components.
-	 
+	 <br/><br/>
 	 Imprint builds on ideas from Twitter. Twitter created ZipKin,
       but most of the tooling is in the Scala world. Rails also
       provides a request_id which IMPRINT can use. Imprint makes it
       easy to capture a request trace and help propagate it through
       multiple systems. The gem helps simplify the process to integrate it into
       multiple tools.
-
+	 <br/><br/>
 	 We use imprint in our base internal api-client. This means
        all inter-app service calls will pass the current requests
        trace_id as a header to the server. The api service then uses
@@ -899,24 +910,24 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
 	Most of the above monitors focus on a particular piece of the
       puzzle. It takes effort to setup ahead of time and then time to
       collect and analyze the data.
-
+	<br/><br/>
 	It seemed like a pattern could be
       abstracted, which would be more generally useful. Really I
       wanted to know how often a given line of code was being run in
       production.
-
+	<br/><br/>
 	Ruby VM tooling around this area keeps getting
       better, while Coverage make this easy to do for tests, it has
       some bugs that prevent it being used for production. I ended up
       working with set_trace_fun and sampling a percentage of requests
       to get some great data.
-
+	<br/><br/>
 	Unfortunately, the performance hit is pretty large for big
       applications. I am running this on Monorail size apps with about
       1% of requests being sampled. While I can run 60-90% of requests
       small Sinatra apps without noticing much of a performance
       impact.
-
+	<br/><br/>
 	I am currently in progress with a native c extension which
       should significantly improve performance. I also think that
       using a sampling profiler based on time opposed to sampling full
@@ -956,28 +967,28 @@ end</code></pre>
       sample a request ass it comes in. When enabled for a request stores the
       coverage of code run during the entire request and sync it up to Redis
       at the end of the request.
-	
+	<br/><br/>
 	To configure coverband you can either put this config block
       where necessary of place it in `config/coverband.rb` which it
       gets picked up when you call Coverband.configure.
-
+	<br/><br/>
 	`Coverband.parse_baseline` tells Coverband where to find a
       baseline recording of code coverage just from loading the
       application. A lot of Ruby code is run just loading the Rails
       app, and that isn't capture during the request cycle. So we can
       just record that once and merge it in with live coverage data.
-
+	<br/><br/>
 	Setting it up, you can see I provide different settings for
       development and production. It makes it easier to test and
       verify in development with a large sample rate.
-
+	<br/><br/>
 	A couple settings to note, `config.startup_delay` Rails
       defines a lot of methods dynamically on the first few requests
       we ignore d because they can run much slower with Coverband.
-
+	<br/><br/>
 	percentage is the number of requests that we will sample and
       record with coverband.
-
+	<br/><br/>
 	ignore lets you not record section of code you wish to
       skip. Skipping heavy non app code like vendor or lib can also
       help to reduce the performance impacts.
@@ -1002,7 +1013,7 @@ run ActionController::Dispatcher.new</code></pre>
 	After installing the gem and creating a config file. You want
 	to include the rake tasks into your `Rakefile` and you want to
 	setup the middleware.
-
+	<br/><br/>
 	In this example I am setting up the middleware as early as
       possible in the `config.ru`. Really unless you have lots of
       custom rack middleware setting it up anywhere in your middleware
@@ -1107,27 +1118,27 @@ file:
 	historically hasn't been very good it has been improving.
 	We have members of the community that are
 	working on making better.
-
+	<br/><br/>
 	So I wanted to point out some other gems and tools that can
 	either help you understand what is going on with your system
 	or with the performance of the code as it runs. Some of these
 	tools can be used in production while others are a probably
 	best in development only until the tooling gets better.
-	
+	<br/><br/>
 	Anything by by Aman Gupta is generally awesome. Not only has
       he released amazing gems and tools. He is now on the frontline
       improving the Ruby VM to help it provide valuable runtime data
       back to clients.
-
+	<br/><br/>
 	Sam Rawlins has been doing amazing work related to GC tools to
       help you understand what is going on on systems. I recommend his
       MtnWestRuby talk
-
+	<br/><br/>
 	change.org has related a interesting MethodProfiler tool.
-
+	<br/><br/>
 	Simeon Willbanks has a interesting tool that will collect
       method cache invalidations for Ruby 2.1
-
+	<br/><br/>
 	A lot of great work is going on to help give us better
       insights into what is happening with our code on production.
       </div>
@@ -1154,8 +1165,9 @@ file:
 	I wanted to say thanks to LivingSocial who lets me work some
       of these tools and sends me around to some conferences. Also, if
       you think any of this is interesting we are hiring.
-
-	Thanks for listening, hope you found some of this interesting.
+	<br/><br/>
+	Thanks for listening, hope you found some of this useful for
+      your applications.
       </div>
     </section>
 
