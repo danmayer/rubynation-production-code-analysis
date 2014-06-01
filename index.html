@@ -335,10 +335,10 @@
 
     <section class="slide">
 	<h2>Team Effort</h2>
-	<pre>[~/projects/deals]git log --numstat --pretty="%H" --author="dan.mayer" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
-+20973, -47034</pre>
-	<pre>[~/projects/deals] git log --numstat --pretty="%H" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'
-+197326, -215514</pre>
+        <h3>My diff over last 2 years</h3>
+	<pre>+20973, -47034</pre>
+        <h3>Team diff over last 2 years</h3>
+	<pre>+197326, -215514</pre>
         <div class="slide-notes">
 	  Also, wanted to point out getting code bases into shape. Is
 	really a team effort. As a team we celebrate our code
@@ -348,6 +348,12 @@
 	  Linking to little victories in campfire all the
 	way.
 	</div>
+    </section>
+
+    <section class="slide">
+	<h2>Git Spelunking</h2>
+	<pre>[~/projects/deals]git log --numstat --pretty="%H" --author="dan.mayer" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</pre>
+        <pre>[~/projects/deals] git log --numstat --pretty="%H" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</pre>
     </section>
 	
     <section class="slide">
