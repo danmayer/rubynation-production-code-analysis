@@ -44,10 +44,9 @@
       <p>
         <ul>
 	  <li>
-	    Dan Mayer (<a href="http://livingsocial.com">LivingSocial</a>)
+	    <a href="http://www.mayerdan.com">Dan Mayer</a> (<a href="http://livingsocial.com">LivingSocial</a>)
 	    <ul>
-	      <li><a href="http://mayerdan.com">http://mayerdan.com</a></li>
-	      <li><a href="http://github.com/danmayer">github: @danmayer</a></li>
+	      <li>slides: <a href="http://www.mayerdan.com/rubynation-production-code-analysis/">http://www.mayerdan.com/rubynation-production-code-analysis/</a></li>
 	      <li><a href="http://twitter.com/danmayer">twitter: @danmayer</a></li>
 	    </ul>
 	  </li>
@@ -84,19 +83,20 @@
     </section>
 
     <section class="slide">
-      <h2>MonoRail</h2>
+      <h2>MonoRail
+      <span class="small"><a href="http://www.thesimpsons.com/">The
+      Simpsons</a></span>
+      </h2>
       <ul class="monorail">
         <li class="slide">
-          <h3>Pre Existing</h3>
-          <img src="./images/monorail.jpg" />
+          <h4 class="thin">Pre Existing <img src="./images/monorail.jpg" /></h4>
 	  <div class="slide-notes">
 	    	The application began as a fork of an existing project to
 	quickly validate an idea.
 	  </div>
         </li>
         <li class="slide">
-          <h3>Consumer</h3>
-          <img src="./images/monorail2.jpg" />
+          <h4 class="thin">Consumer <img src="./images/monorail2.jpg" /></h4>
           <div class="slide-notes">
 	    That grew into a consumer business, which is what most
       people know as LivingSocial today.
@@ -109,13 +109,13 @@
         </li>
 	<li class="slide">
 	  <table style="margin: 0px auto;"><tr><td>
-	    <h3>Admin</h3>
+	    <h4>Admin</h4>
             <img src="./images/monorail3.jpg" />
 	  </td><td>
-	    <h3>CMS</h3>
+	    <h4>CMS</h4>
             <img src="./images/monorail4.jpg" />
 	  </td><td>
-	    <h3>CRMS</h3>
+	    <h4>CRMS</h4>
             <img src="./images/monorail5.jpg" />
           </td></tr></table>
           <div class="slide-notes">
@@ -124,18 +124,6 @@
 	    <br/><br/>
 	Which code is needed for the smaller slice of responsibilities, what
       can be removed from the parent or app?
-	  </div>
-        </li>
-	<li class="slide">
-          <h3><a href="http://www.thesimpsons.com/">The Simpsons</a></h3>
-          <img src="./images/monorail6.jpg" />
-	  <div class="slide-notes">
-	    If you keep going like this without ever cleaning up the apps
-	no longer necessary code. You will eventually crash.
-	    <br/><br/>
-	Looking production runtime can help tell you.
-	    <br/><br/>
-	(images obviously taken from the Simpsons)
 	  </div>
         </li>
       </ul>
@@ -148,6 +136,19 @@
       </div>
     </section>
 
+    <section class="slide">
+      <h2>No Cleanup...</h2>
+      <img src="./images/monorail6.jpg" />
+      <div class="slide-notes">
+	If you keep going like this without ever cleaning up the apps
+	no longer necessary code. You will eventually crash.
+	<br/><br/>
+	Looking production runtime can help tell you.
+	<br/><br/>
+	(images obviously taken from the Simpsons)
+      </div>
+    </section>
+      
     <section class="slide">
       <h2>How Dead Code Sticks Around</h2>
       <p>
@@ -355,6 +356,18 @@
 	<pre>[~/projects/deals]git log --numstat --pretty="%H" --author="dan.mayer" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</pre>
         <pre>[~/projects/deals] git log --numstat --pretty="%H" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</pre>
     </section>
+
+    <section class="slide">
+      <h2>Problem: Unused Actions</h2>
+      
+      <div class="slide-notes">
+	To find large sections of code no longer in use. Let's start
+	to find	which actions and routes that are out of use.
+	<br/><br/>
+	This is one of the easiest ways to find unnecessary code,
+	removing the top level action, associated helpers, and views. 
+      </div>
+    </section>
 	
     <section class="slide">
       <h2>Using 3rd Party tool (NewRelic)</h2>
@@ -409,16 +422,13 @@ AuthorizationRulesController#change</pre>
       <h2>Stats Instrumentation</h2>
       <p>
         <ul>
-	  <li>No NewRelic: No Problem</li>
-      	  <li>Background Events Executed: All events being triggered?</li>
-	  <li>Emails Sent: Are you still sending all your mailers?</li>
-	  <li>Views Rendered: partials, templates, and layouts</li>
-	  <li>One Off Trackers: usage of code
-      branches & other hard to verify code</li>
-	  <li>Production Performance Comparisons: What's faster on
-      production data</li>
-	  <li>Translations Usage: How many translation keys are you
-      loading in memory & never using</li>
+	  <li>Actions</li>
+      	  <li>Background Events</li>
+	  <li>Mailers</li>
+	  <li>Views</li>
+	  <li>One Off Trackers</li>
+	  <li>Multiple Solutions</li>
+	  <li>Translations Usage</li>
         </ul>
       </p>
       <div class="slide-notes">
@@ -464,6 +474,15 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
     </section>
 
     <section class="slide">
+      <h2>Problem: Unused Actions</h2>
+      
+      <div class="slide-notes">
+	Earlier We solved this using 3rd party performance tools, but
+	it is easy to solve with some custom stats. 
+      </div>
+    </section>
+      
+    <section class="slide">
       <h2>No NewRelic, No Problem</h2>
       <p>thanks <a href="https://twitter.com/jwhitmire">Jeff
     Whitmire</a></p>
@@ -487,9 +506,6 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
   end
 </code></pre>
       <div class="slide-notes">
-	First up, not using NewRelic or another performance tool? No
-    problem.
-	<br/><br/>
 	We have a couple of ways we have added tracking on endpoints
       and timing in Rails. I think the simplest and cleanest example
       was done by <a href="https://twitter.com/jwhitmire">Jeff
@@ -499,9 +515,22 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
       to configure alerts based on percentile performance changes.
       </div>
     </section>
-
+      
     <section class="slide">
-      <h2>Background Events Executed</h2>
+      <h2>Problem: Background Events</h2>
+      <p>All events being triggered?</p>
+      <div class="slide-notes">
+	If you run a sizable Rails app you likely run background
+	jobs.
+	<br/><br/>
+	Some jobs will come and go over time. It is pretty easy to
+  remove code that queues a job, while leaving around the job code and
+	related methods.
+      </div>
+    </section>
+      
+    <section class="slide">
+      <h2>Background Events</h2>
       <pre><code># Example for Resque background jobs
 def before_perform(*args)
   STATSD.increment "resque.processed.#{get_event_name}"
@@ -511,12 +540,7 @@ def after_perform(*args)
   STATSD.increment "resque.completed.#{get_event_name}"
 end</code></pre>
       <div class="slide-notes">
-	If you run a sizable Rails app you likely run background
-  jobs.
-	<br/><br/>
-	Some jobs will come and go over time. It is pretty easy to
-  remove code that queues a job, while leaving around the job code and
-  related methods. It is easy to instrument how often something is
+	 It is easy to instrument how often something is
   processed, completed. With a bit more work you can record execution time around jobs or
   success/failures on completion.
 	<br/><br/>
@@ -525,7 +549,18 @@ end</code></pre>
     </section>
 
     <section class="slide">
-      <h2>Emails Sent</h2>
+      <h2>Problem: Mailers</h2>
+      <p>Are you still sending all your mailers?</p>
+      <div class="slide-notes">
+	Mailers like background jobs and come and go. Stating every
+  mailer as it is sent lets you know when a mailer is no longer needed.
+	<br/><br/>
+	Or perhaps knowing which mailers you should spend more time improving based on the send volume.
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Mailers</h2>
       <pre><code># Example for ActionMailer
 class BaseMailer < ActionMailer::Base
   def initialize(method_name=nil, *parameters)
@@ -535,19 +570,32 @@ class BaseMailer < ActionMailer::Base
   end
 end</code></pre>
      <div class="slide-notes">
-       Mailers like background jobs and come and go. Stating every
-  mailer as it is sent lets you know when a mailer is no longer
-      needed.
-       <br/><br/>
-       Or perhaps which mailers you should spend more time
-  improving based on the send volume. This is a simple example of hooking into
-  action mailer to stat every mailer sent.
+       This example is how to hooking into action mailer to stat every mailer sent.
       </div>
     </section>
-	
+
+    <section class="slide">
+      <h2>Problem: Views</h2>
+      <p>which views are ever rendered: partials, templates, layouts,
+      for each format?</p>
+      <div class="slide-notes">
+	The view layer more than anywhere else can get quickly messy
+	and hard to follow.
+	<br/><br/>
+	Partials inside layouts, inside partials, and
+	ajax... Oh My.
+	<br/><br/>
+	A new view gets tested or moved and people aren't
+	sure if the partial is used anywhere else. AB tests leave views
+	behind.
+      </div>
+    </section>
+      
     <section class="slide">
       <h2>Views Rendered</h2>
-      <pre><code>ActiveSupport::Notifications.subscribe /render_partial.action_view|render_template.action_view/ do |name, start, finish, id, payload| 
+      <pre><code>subscriptions =
+      render_partial.action_view|render_template.action_view
+  ActiveSupport::Notifications.subscribe /subscriptions/ do |name, start, finish, id, payload| 
   RenderTracker.track_template(name, start, finish, id, payload) unless name.include?('!') 
 end
 
@@ -562,16 +610,6 @@ class RenderTracker
   end
 end</code></pre>
      <div class="slide-notes">
-       The view layer more than anywhere else can get quickly messy
-  and hard to follow.
-       <br/><br/>
-       Partials inside layouts, inside partials, and
-  ajax... Oh My.
-       <br/><br/>
-       A new view gets tested or moved and people aren't
-  sure if the partial is used anywhere else. AB tests leave views
-  behind.
-       <br/><br/>
        With ActiveSupport notifications it is easy to stats every view file as it is
   rendered. Again beyond finding unused view code (and the related
   helpers), you get a nice picture of what your most important view
@@ -639,6 +677,23 @@ FLATFOOT.unused_views
     </section>
 
     <section class="slide">
+      <h2>Problem: Complex Code Paths</h2>
+      <p>Reading the code, but still can't tell if there is any real
+      entry point for the code execution? One off trackers can
+      help.</p>
+      <div class="slide-notes">
+	One problem with tracking only controllers and actions, is that
+      the often serve multiple formats and request paths.
+	<br/><br/>
+	For that,
+      one of trackers can be useful. Tracking format specific
+      endpoints, conditional paths, the ever growing case statement
+      branching in to many directions and bit of code really.
+	<br/><br/>
+      </div>
+    </section>
+      
+    <section class="slide">
       <h2>One Off Trackers</h2>
       <pre><code># Example Tracking a code path
 class HomeController < ApplicationController
@@ -656,13 +711,6 @@ class HomeController < ApplicationController
   end
 end</code></pre>
       <div class="slide-notes">
-	One problem with tracking only controllers and actions, is that
-      the often serve multiple formats and request paths.
-	<br/><br/>
-	For that,
-      one of trackers can be useful. Tracking format specific
-      endpoints, conditional paths, and bit of code really.
-	<br/><br/>
 	We use the deprecated namespace in
       our apps to track helper methods, models, views. It
       also provides a quick way to jump into code cleanup. Grep the
@@ -672,8 +720,31 @@ end</code></pre>
     </section>
 
     <section class="slide">
+      <h2>Problem: Multiple Solutions</h2>
+      <p>Which is best, which to keep?
+      <br/><br/>
+         shout out to <a
+      href="https://twitter.com/ubermajestix">@ubermajestix (Tyler
+      Montgomery)</a> for showing me the timing trick</a>
+      </p>
+      <div class="slide-notes">
+	This isn't actually related to finding unused code, but I like
+	this trick so much I wanted to share it.
+	<br/><br/>
+	Shout out to Tyler Montgomery, who checked this great idea
+  into our git one day.
+	<br/><br/>
+	One off trackers, aren't only useful for finding unused
+  code. It can be a great way to launch performance enhancements.
+	<br/><br/>
+	If you currently have two existing solutions and are decided
+      while refactoring which to use, you can take the guess work out
+      by measure real world usage.
+      </div>
+    </section>
+      
+    <section class="slide">
       <h2>Prod Performance Checks</h2>
-      <p>shout out to <a href="https://twitter.com/ubermajestix">@ubermajestix (Tyler Montgomery)</a> for showing me the timing trick</a>
       <pre><code>
 def example_html_stripping_method
   strip_method = rand(2)&1 == 0 ? 'nokogiri' : 'strip_tags'
@@ -687,15 +758,6 @@ def example_html_stripping_method
   #...
 end</code></pre>
       <div class="slide-notes">
-	This isn't actually related to finding unused code, but I like
-      this trick so much I wanted to share it.
-	<br/><br/>
-	Shout out to Tyler Montgomery, who checked this great idea
-  into our git one day.
-	<br/><br/>
-	One off trackers, aren't only useful for finding unused
-  code. It can be a great way to launch performance enhancements.
-	<br/><br/>
 	To gather data on the performance of two implementations with
   production data sets. Simply split
   the code between old and new while sending the timing info to
@@ -705,6 +767,23 @@ end</code></pre>
       </div>
     </section>
 
+    <section class="slide">
+      <h2>Problem: Translations Usage</h2>
+      <p>How many translation keys are you
+      loading in memory & never using?
+      </p>
+      <div class="slide-notes">
+	Another piece of an application that can easily become a out
+	of sync is translation keys. Over time, it is hard to know which
+	translations are still in use.
+	<br/><br/>
+	Translation keys
+	end up causing a not fun memory bloat for production rails
+	processes. That unchecked over time can be quite costly for
+	overall performance.
+      </div>
+    </section>
+      
     <section class="slide">
       <h2>Translations Usage</h2>
       <p>We made a gem for that <a href="https://twitter.com/the_chrismo">@the_chrismo (Chris Morris)</a> built: <a href="https://github.com/livingsocial/humperdink">Humperdink</a>
@@ -726,15 +805,6 @@ end</code></pre>
   end
 ...</code></pre>
       <div class="slide-notes">
-	Another piece of an application that can easily become a out
-    of sync is translation keys. Over time, it is hard to know which
-    translations are still in use.
-	<br/><br/>
-	Translation keys
-    end up causing a not fun memory bloat for production rails
-    processes. That unchecked over time can be quite costly for
-    overall performance.
-	<br/><br/>
 	Chris Morris built Humperdink which has a
     number of uses, but is particularly well suited to help track down
     no longer used translation keys.

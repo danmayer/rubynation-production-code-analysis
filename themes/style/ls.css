@@ -477,3 +477,16 @@ span.img-src {
 span.img-src a {
     font-size: 13px;
 }
+
+h2 > span.small {
+    font-size: 34px;
+}
+
+h4.thin {
+    display:inline;
+}
+
+h4.thin img {    
+    display: inline;
+    margin-bottom: 0;
+}
