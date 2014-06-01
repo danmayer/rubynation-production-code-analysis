@@ -626,7 +626,7 @@ end</code></pre>
 
     <section class="slide">
       <h2>Views Rendered (with Flatfoot)</h2>
-      <p>We made a gem for that and some helpers: <a href="https://github.com/livingsocial/flatfoot">Flatfoot</a>
+      <p>We made a gem for Rails 3 and up to help: <a href="https://github.com/livingsocial/flatfoot">Flatfoot</a>
       <pre><code>FLATFOOT = Flatfoot::Tracker.new(REDIS)
 
 ActiveSupport::Notifications.subscribe /render_partial.action_view|render_template.action_view/ do |name, start, finish, id, payload|
@@ -941,7 +941,7 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
 	 </ul>
       </p>
        <div class="slide-notes">
-	 	 One place I turn to logs is to know what is happening on a
+	 One place I turn to logs is to know what is happening on a
       the system between applications or components. When deprecating
       old code or splitting up an app tracking down find edge usage
       can be tricky. Logs can be particularly useful for this level of
