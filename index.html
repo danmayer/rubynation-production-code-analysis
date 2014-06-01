@@ -426,9 +426,9 @@ AuthorizationRulesController#change</pre>
       	  <li>Background Events</li>
 	  <li>Mailers</li>
 	  <li>Views</li>
+	  <li>Translations</li>
 	  <li>One Off Trackers</li>
 	  <li>Multiple Solutions</li>
-	  <li>Translations Usage</li>
         </ul>
       </p>
       <div class="slide-notes">
@@ -677,6 +677,53 @@ FLATFOOT.unused_views
     </section>
 
     <section class="slide">
+      <h2>Problem: Translations Usage</h2>
+      <p>How many translation keys are you
+      loading in memory & never using?
+      </p>
+      <div class="slide-notes">
+	Another piece of an application that can easily become a out
+	of sync is translation keys. Over time, it is hard to know which
+	translations are still in use.
+	<br/><br/>
+	Translation keys
+	end up causing a not fun memory bloat for production rails
+	processes. That unchecked over time can be quite costly for
+	overall performance.
+      </div>
+    </section>
+      
+    <section class="slide">
+      <h2>Translations Usage</h2>
+      <p>We made a gem for that <a href="https://twitter.com/the_chrismo">@the_chrismo (Chris Morris)</a> built: <a href="https://github.com/livingsocial/humperdink">Humperdink</a>
+      <pre><code>class KeyTracker
+  def initialize(REDIS, key)
+    redis_set = Humperdink::RedisDirtySet.new(:redis => redis, :key => key, :max_dirty_items => 9)
+    @tracker = Humperdink::Tracker.new(redis_set, :enabled => true)
+  end
+
+  def on_translate(locale, key, options = {})
+    begin
+      if @tracker.tracker_enabled
+        requested_key = normalize_requested_key(key, options)
+        @tracker.track(requested_key)
+      end
+    rescue => e
+      @tracker.shutdown(e)
+    end
+  end
+...</code></pre>
+      <div class="slide-notes">
+	Chris Morris built Humperdink which has a
+    number of uses, but is particularly well suited to help track down
+    no longer used translation keys.
+	<br/><br/>
+	Check out the gem for more details on how
+    to track translations, but the above shows a bit of the basics.
+      </div>
+    </section>
+
+    <section class="slide">
       <h2>Problem: Complex Code Paths</h2>
       <p>Reading the code, but still can't tell if there is any real
       entry point for the code execution? One off trackers can
@@ -764,53 +811,6 @@ end</code></pre>
   StatsD. Gather performance information against actual production
   usage and data, to determine the best algorithm and have a good idea
   of how much better it actually is.
-      </div>
-    </section>
-
-    <section class="slide">
-      <h2>Problem: Translations Usage</h2>
-      <p>How many translation keys are you
-      loading in memory & never using?
-      </p>
-      <div class="slide-notes">
-	Another piece of an application that can easily become a out
-	of sync is translation keys. Over time, it is hard to know which
-	translations are still in use.
-	<br/><br/>
-	Translation keys
-	end up causing a not fun memory bloat for production rails
-	processes. That unchecked over time can be quite costly for
-	overall performance.
-      </div>
-    </section>
-      
-    <section class="slide">
-      <h2>Translations Usage</h2>
-      <p>We made a gem for that <a href="https://twitter.com/the_chrismo">@the_chrismo (Chris Morris)</a> built: <a href="https://github.com/livingsocial/humperdink">Humperdink</a>
-      <pre><code>class KeyTracker
-  def initialize(REDIS, key)
-    redis_set = Humperdink::RedisDirtySet.new(:redis => redis, :key => key, :max_dirty_items => 9)
-    @tracker = Humperdink::Tracker.new(redis_set, :enabled => true)
-  end
-
-  def on_translate(locale, key, options = {})
-    begin
-      if @tracker.tracker_enabled
-        requested_key = normalize_requested_key(key, options)
-        @tracker.track(requested_key)
-      end
-    rescue => e
-      @tracker.shutdown(e)
-    end
-  end
-...</code></pre>
-      <div class="slide-notes">
-	Chris Morris built Humperdink which has a
-    number of uses, but is particularly well suited to help track down
-    no longer used translation keys.
-	<br/><br/>
-	Check out the gem for more details on how
-    to track translations, but the above shows a bit of the basics.
       </div>
     </section>
 
@@ -1227,10 +1227,9 @@ file:
       <p>
         <ul>
 	  <li>
-	    Dan Mayer
+	    <a href="http://mayerdan.com">Dan Mayer</a>
 	    <ul>
-	      <li><a href="http://mayerdan.com">http://mayerdan.com</a></li>
-	      <li><a href="http://github.com/danmayer">github: @danmayer</a></li>
+	      <li>slides: <a href="http://www.mayerdan.com/rubynation-production-code-analysis/">http://www.mayerdan.com/rubynation-production-code-analysis/</a></li>
 	      <li><a href="http://twitter.com/danmayer">twitter: @danmayer</a></li>
 	    </ul>
 	  </li>
