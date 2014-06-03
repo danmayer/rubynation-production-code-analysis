@@ -490,3 +490,32 @@ h4.thin img {
     display: inline;
     margin-bottom: 0;
 }
+
+.deck-notes-pop {
+  font-size: 0.6666em;
+  position: fixed;
+  bottom: 10px;
+  left: 5px;
+  z-index: 3;
+  margin: 0;
+}
+
+.deck-notes-pop a,
+.deck-notes-pop a:hover,
+.deck-notes-pop a:focus,
+.deck-notes-pop a:active,
+.deck-notes-pop a:visited {
+  color: #888;
+}
+
+.slide-notes {
+    top: 30%;
+    background: #fff;
+    z-index: 10;
+    text-align: center;
+    padding: 30px 20px;
+    margin: 8px;
+    font-size: 30px;
+    position: absolute;
+    width: 90%;
+}

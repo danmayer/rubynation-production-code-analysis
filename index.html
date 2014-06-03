@@ -52,6 +52,15 @@
 	  </li>
         </ul>
       </p>
+      <div class="slide-notes">
+	Hello and Welcome. I am Dan Mayer from LivingSocial
+	<br/><br/>
+	I am here to talk about production code analysis, Tales of
+      Deleting 200K+ LOC.
+	<br/>
+	As the talk title indicates I am focusing on finding unused
+      using code analysis.
+      </div>
     </section>
 
     <section class="slide">
@@ -355,6 +364,10 @@
 	<h2>Git Spelunking</h2>
 	<pre>[~/projects/deals]git log --numstat --pretty="%H" --author="dan.mayer" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</pre>
         <pre>[~/projects/deals] git log --numstat --pretty="%H" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</pre>
+	<div class="slide-notes">
+	  Wanted to share a fun git trick to pull up stats on any
+	author and the team.
+	</div>
     </section>
 
     <section class="slide">
@@ -871,6 +884,47 @@ end</code></pre>
       </div>
     </section>
 
+
+    <section class="slide">
+      <h2>Log Queries</h2>
+      <pre># most common format (HTML, JSON) for controller/action
+source="*app/*" status=200 |
+ top format by controller action
+
+# endpoints with more 406 Not acceptable than 200s
+source="*app/*" |
+ stats count(eval(status=406)) as UNAUTH,
+ count(eval(status=200)) as SUCC
+ by controller action | where UNAUTH > SUCC
+
+# endpoints with more redirects than 200s
+source="*app/*" |
+ stats count(eval(status=301 OR status=302)) as REDIRECT,
+ count(eval(status=200)) as SUCC
+ by controller action |
+ where REDIRECT > SUCC
+
+# find all requests by a given user
+source="*app/*" user_id=XXX
+      </pre>
+      <div class="slide-notes">
+	Here are some of the examples of the kinds of queries you can
+	craft once you have well formatted logs.
+	<br/><br/>
+	Most common format per action controller pair
+	<br/>
+	Endpoints with more 406 Not acceptable than status 200
+	success, this often means old clients which are no longer
+	valid are never successfully getting to an endpoint.
+	<br/><br/>Possibly
+	an endpoint that could be deprecated and removed.
+	<br/><br/>
+	Which endpoint redirects more than returns 200
+	<br/>
+	View all requests by a given user
+      </div>
+    </section>
+      
     <section class="slide">
       <h2>Logs: Deprecation with caller trace</h2>
       <p>
@@ -1264,6 +1318,17 @@ file:
       <span class="deck-status-total"></span>
     </p>
 
+    <script>
+      var notesLoad = function() {
+        $.deck('getSlide').find('.slide-notes').toggle('slideup');
+      };
+
+    </script>
+      
+    <p class="deck-notes-pop" aria-role="status">
+      <a href="#" onclick="script: notesLoad();" class="deck-notes-pop-link">speaker notes</a>
+    </p>
+
     <!-- deck.goto snippet -->
     <form action="." method="get" class="goto-form">
       <label for="goto-slide">Go to slide:</label>
@@ -1290,10 +1355,20 @@ file:
 
 <!-- Initialize the deck. You can put this in an external file if desired. -->
 <script>hljs.initHighlightingOnLoad();</script>
-<script>
+<script>  
   $(function() {
     $.deck('.slide');
   });
+
+  /* quick function to hide speaker notes on slide change*/
+   (function($, undefined) {
+   var $document = $(document);
+
+   var hideNotes = function(event, from, to) {
+     $('.slide-notes').hide();
+   };
+  $document.bind('deck.change', hideNotes);
+  })(jQuery, 'deck');
 </script>
 </body>
 </html>
