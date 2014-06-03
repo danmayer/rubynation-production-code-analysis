@@ -170,7 +170,7 @@
 	  <li>One offs that are irrelevant over time</li>
 	  <li>Deprecation of old endpoints takes time</li>
 	  <li>Refactoring leaves dead code paths behind</li>
-      	  <li>A dev making a 'safe' & creating new methods
+      	  <li>Making a 'safe' change & creating new methods
       opposed to altering existing methods with multiple callers</li>
 	  <li>There are tests, but it is never used in production</li>
           <li>etc...</li>
@@ -226,7 +226,7 @@
 	  <li>is easier to upgrade (Rails, Ruby, and Gem versions)</li>
 	  <li>is easier to refactor</li>
 	  <li>is easier to adapt to new requirements</li>
-	  <li>means there are less and faster tests</li>
+	  <li>means there are fewer and faster tests</li>
       </ul>
       <div class="slide-notes">
       ...Less code is better. Obviously if the code is doing work it has some value,
@@ -790,7 +790,7 @@ end</code></pre>
       <br/><br/>
          shout out to <a
       href="https://twitter.com/ubermajestix">@ubermajestix (Tyler
-      Montgomery)</a> for showing me the timing trick</a>
+      Montgomery)</a> for showing me the next trick</a>
       </p>
       <div class="slide-notes">
 	This isn't actually related to finding unused code, but I like
@@ -1185,11 +1185,16 @@ file:
     <section class="slide">
       <h2>Gems</h2>
         <ul>
-	  <li><a href="https://github.com/livingsocial/newrelic_route_check">livingsocial/newrelic_route_check</a></li>
-	  <li><a href="https://github.com/livingsocial/flatfoot">livingsocial/flatfoot</a></li>
-	  <li><a href="https://github.com/livingsocial/humperdink">livingsocial/humperdink</a></li>
-	  <li><a href="https://github.com/livingsocial/imprint">livingsocial/imprint</a></li>
-	  <li><a href="https://github.com/danmayer/coverband">danmayer/coverband</a></li>
+	  <li>New Relic Helpers: <br/>
+	    <a href="https://github.com/livingsocial/newrelic_route_check">livingsocial/newrelic_route_check</a></li>
+	  <li>View Render Tracking: <br/>
+	    <a href="https://github.com/livingsocial/flatfoot">livingsocial/flatfoot</a></li>
+	  <li>Translation Tracking: <br/>
+	    <a href="https://github.com/livingsocial/humperdink">livingsocial/humperdink</a></li>
+	  <li>Log Helpers: <br/>
+	    <a href="https://github.com/livingsocial/imprint">livingsocial/imprint</a></li>
+	  <li>Production Code Coverage: <br/>
+	    <a href="https://github.com/danmayer/coverband">danmayer/coverband</a></li>
         </ul>
       <div class="slide-notes">
 	Here is a list of the gems, I mentioned during the talk.
