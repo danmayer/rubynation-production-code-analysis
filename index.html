@@ -892,9 +892,7 @@ FLATFOOT.unused_views
 
     <section class="slide">
       <h2>Problem: Complex Code Paths</h2>
-      <p>Reading the code, but still can't tell if there is any real
-      entry point for the code execution? One off trackers can
-      help.</p>
+      <p>Reading the code, unsure where / if it is called?</p>
       <div class="slide-notes">
 	One problem with tracking only controllers actions, is that
       the often serve multiple formats and request paths.
@@ -1318,18 +1316,16 @@ run ActionController::Dispatcher.new</code></pre>
       <h2>Production Code Coverage: Coverband</h2>
       <pre><code>config.verbose = 'debug'
 coverband file usage:
-      [["/Users/danmayer/projects/pipeline/lib/facebook.rb", 6],
-      ["/Users/danmayer/projects/pipeline/app/models/deal_modules.rb", 9],
+      ["./app/models/deal_modules.rb", 9],
       ...
-      ["/Users/danmayer/projects/pipeline/app/models/deal.rb", 20606],
-      ["/Users/danmayer/projects/pipeline/app/helpers/application_helper.rb",
-      43150]]
+      ["./app/models/deal.rb", 20606],
+      ["./app/helpers/application_helper.rb", 43150]]
 
 file:
-  /Users/danmayer/projects/pipeline/app/helpers/application_helper.rb =>
+  ./app/helpers/application_helper.rb =>
   [[448, 1], [202, 1],
   ...
-  [517, 1617], [516, 38577]]</code></pre>
+  [516, 38577]]</code></pre>
       <div class="slide-notes">
 	Coverband can give you interesting information and help you to
       find hotspots of code in development mode as well. If you enable
