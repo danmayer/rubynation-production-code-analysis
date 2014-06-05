@@ -13,9 +13,8 @@ If you want presenter mode make sure the deck.remote.js script is in the file. T
 
 To control the presentation and view the speaker notes, then run the deck.remote project.
 
-    cd ~/projects/deck.remote.js
-    ./main.js
-    open deck-remote-client/index.html
+    ~/projects/deck.remote.js/deck-remote-server/main.js &
+    open ~/projects/deck.remote.js/deck-remote-client/index.html
 
 
 ## Add Slides (Maybe)

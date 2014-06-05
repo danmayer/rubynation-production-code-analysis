@@ -53,13 +53,13 @@
         </ul>
       </p>
       <div class="slide-notes">
-	Hello and Welcome. I am Dan Mayer from LivingSocial
+	Hello. I am Dan Mayer from LivingSocial
 	<br/><br/>
 	I am here to talk about production code analysis, Tales of
       Deleting 200K+ LOC.
-	<br/>
+	<br/><br/>
 	As the talk title indicates I am focusing on finding unused
-      using code analysis.
+      code using analysis.
       </div>
     </section>
 
@@ -77,17 +77,24 @@
 	  </span>
       </td></tr></table>
       <div class="slide-notes">
-	We have all seen spaghetti code. It is hard to understand and
-      follow all the code paths. It is difficult to change and
-	maintain.
+	spaghetti code!
+	<br/><br/>
+	We have all seen spaghetti code.
+	It is hard to understand<br/>
+	Hard to follow all the code paths.<br/>
+	It is difficult to change and maintain.
         <br/><br/>
 	As projects grow and age it is very difficult to entirely
-      avoid. Untangling it is hard but code analysis can help.
+      avoid.
+	<br/>
+	Untangling it is hard but runtime analysis can help.
 	<br/><br/>
       First I want to briefly explain
       how a project can reach a point where there is over 200KLOC that
-      can be removed. Then I can explain some processes to help find
-      and remove unnecessary complexity.
+      can be removed.
+	<br/><br/>
+	Then I can explain some processes to help find
+      and remove unnecessary complexity in your apps.
       </div>
     </section>
 
@@ -100,6 +107,12 @@
         <li class="slide">
           <h4 class="thin">Pre Existing <img src="./images/monorail.jpg" /></h4>
 	  <div class="slide-notes">
+	    	Yes, we have a MonoRail app. A monolithic multiple years old
+	    Rails app with legacy code...
+	    <br/><br/>
+	    Actually we have more than one, how did we get here. A bit of
+	    history.
+	    <br/><br/>
 	    	The application began as a fork of an existing project to
 	quickly validate an idea.
 	  </div>
@@ -132,29 +145,25 @@
       code, but after each split they have less responsibility.
 	    <br/><br/>
 	Which code is needed for the smaller slice of responsibilities, what
-      can be removed from the parent or app?
+      can be removed from the parent or child app?
 	  </div>
         </li>
       </ul>
-      <div class="slide-notes">
-	Yes, we have a MonoRail app. A monolithic multiple years old
-      Rails app with legacy code...
-	<br/><br/>
-	Actually we have more than one, how did we get here. A bit of
- history.
-      </div>
     </section>
 
     <section class="slide">
       <h2>No Cleanup...</h2>
       <img src="./images/monorail6.jpg" />
       <div class="slide-notes">
-	If you keep going like this without ever cleaning up the apps
-	no longer necessary code. You will eventually crash.
+	If you keep going like this forking apps and growing them for
+      years, without ever cleaning up the code.
 	<br/><br/>
-	Looking production runtime can help tell you.
+	You will eventually crash.
 	<br/><br/>
-	(images obviously taken from the Simpsons)
+	Looking at what the actual code is doing can help can help
+      tell you what is necessary.
+	<br/><br/>
+	(images are from one of my favroite episodes of the Simpsons)
       </div>
     </section>
       
@@ -177,17 +186,22 @@
 	</ul>
       </p>
       <div class="slide-notes">
-	Beyond Monorails, dead code can slip into a system many
+	Beyond Monorails, dead code can slip into a system in many
       ways.
 	<br/><br/>
 	I am not really going into all the details, but suffice to
       say. Every system I have worked on grows and at some point has
-      unnecessary code tucked away into the corners at some
-      point.
+      unnecessary code tucked away into dark corners.
 	<br/><br/>
 	Features that don't quite justify their UI complexity,
-      pivoting away from some direction, either for business or
-      development reasons. 
+	<br/>
+	pivoting away from some direction,
+	<br/>
+	either for business or development reasons,
+	<br/>
+	AB tests, the list goes on and on.
+	<br/><br/>
+	I am sure many of you have seen this in your own apps.
       </div>
     </section>
 	
@@ -206,14 +220,18 @@
       </blockquote>
       <div class="slide-notes">
 	Their is a pretty hilarious article titled "programming still
-      sucks" by Peter Welch, recently making it around the net.
+      sucks" by Peter Welch, recently making the rounds on the net.
 	<br/><br/>
 	In it he makes the analogy of a team
-      building a bridge, not knowing what they are doing building half
-      suspension and half support bride.
+      building a bridge, not knowing what they are doing.
 	<br/><br/>
-	In the article he jokingly states, "all code is bad". That
-      must mean...
+	resulting in them building half a suspension and half a support bridge.
+	<br/><br/>
+	Several things in this article jumped out at me.
+	<br/><br/>
+	such as the statement, "all code is bad".
+	<br/><br/>
+	Which obviously not entirely true, must mean...
       </div>
     </section>
 
@@ -229,9 +247,14 @@
 	  <li>means there are fewer and faster tests</li>
       </ul>
       <div class="slide-notes">
-      ...Less code is better. Obviously if the code is doing work it has some value,
-      but I don't think I have to spend much time time on why having less code
+      ...Less code is better.
+	<br/><br/>
+	Obviously if code is doing work for your business it has some value,
+      but I don't think I have to spend much time time explaining why having less code
       & simpler systems is better.
+	<br/><br/>
+	Less Code for many reasons makes it easier you and your team to focus on making
+      important changes.
       </div>
     </section>
 
@@ -245,14 +268,22 @@
 	  <li>Keep Only the Code Needed, No More</li>
       </ul>
       <div class="slide-notes">
-	So if the problem is all code is bad and we agree less code is better, the
-      solution is clean up dead code. Keeping only the code need.
+	So if the problem is all code is bad and less code is better, the
+      solution is..
+	<br/>
+	clean up unused code.
+	<br/>
+	Keeping only the code needed.
 	<br/><br/>
-	We can make our projects better by only working what we
-      need. The code that is actively adding value to our
-      business and users.
+	We can make our projects better by only working on what is
+      providing value.
+	<br/>
+	Code that is actively in use by our business
+      and users.
 	<br/><br/>
-	Sounds good, let's delete all the code... Or some of it, which code...
+	Sounds good, let's delete all the code...
+	<br/><br/>
+	Or some of it, which code...
       </div>
     </section>
 
@@ -272,9 +303,14 @@
 	</cite></p>
       </blockquote>
       <div class="slide-notes">
-	In the article the bridge analogy continues, explaining why the
-      team left the suspension cables up after switching to a support
-      column bridge.
+	back to the bridge ananlogy in the article
+	<br/><br/>
+	 something else struck me...
+	<br/><br/>
+	"They left the suspension cables because they're still sort
+      of holding up parts of the bridge."
+	<br/><br/>
+	and now for the line that really stood out
       </div>
     </section>
 
@@ -291,13 +327,16 @@
 	</cite></p>
       </blockquote>
       <div class="slide-notes">
-	What really caught my attention in the article was this
-      specific line.
+	"Nobody knows which parts, but everybody's pretty sure they're important parts."
 	<br/><br/>
-	Nobody knows which parts.
+	Hmmm Really?
+	Nobody knows which parts?
 	<br/><br/>
 	We don't have to settle for guessing, we can solve this
-      problem... We can use data.
+      problem...<br/><br/>
+	We can use data.
+	<br/><br/>
+	We can use code and analytics.
       </div>
     </section>
 
@@ -314,18 +353,29 @@
         </ul>
       </p>
       <div class="slide-notes">
-	Hopefully that explains a bit about how one can end up in a
+	Hopefully that explains a bit about how a team can end up in a
       place where they need data to help them know what is going on
-      with their systems.
+	with their systems.
 	<br/><br/>
 	I am going to go through some examples of processes we have
       used to find unused code. From very simple methods, to more
-      complicated processes. Also, note if you run `rake stats` on a
-      Rail app and have less than 3-5K lines of application code. You
-      can probably just reason about all this in your head pretty
-      easily and some of these tools might seem like overkill. We had
-      apps pushing 80K lines of app code, excluding view layer,
-      JS, CSS.
+      complicated processes.
+	<br/><br/>
+	We will talk about 3rd party tools<br/>
+	Cumstom Stats<br/>
+	Using Logs<br/>
+	and Prodcution Code Coverage
+	<br/><br/>
+	Also, note if you run `rake stats` on a
+      Rail app and have less than 3-5K lines of code.
+	<br/><br/>
+	You can probably just reason about the code in your head.
+	<br/><br/>
+	and these tools might seem like overkill.
+	<br/><br/>
+	We had apps pushing 80K lines of app code
+	<br/><br/>
+	excluding the view layer, javascript, and CSS.
       </div>
     </section>
 
@@ -335,9 +385,13 @@
 	<p>(grown up marketing speak: "street cred" => "social
 	proof")</p>
       <div class="slide-notes">
-	Just to show that this isn't some idea, these are processes we
-	have been able to put into practice. Here is my history on one
-	of our Monorails apps. I am pretty proud to have removed
+	These aren't just unproven ideas, these are processes we
+	have been able to put into practice.
+	<br/><br/>
+	Here is my history on one
+	of our Monorails apps.
+	<br/><br/>
+	I am pretty proud to have removed
 	nearly 2 lines of code for every one added, while delivery
 	additional functionality and faster performance.
       </div>
@@ -351,12 +405,17 @@
 	<pre>+197326, -215514</pre>
         <div class="slide-notes">
 	  Also, wanted to point out getting code bases into shape. Is
-	really a team effort. As a team we celebrate our code
-	improvements. Pointing out and cheering on particularly good commits, faster tests,
+	really a team effort.
+	  <br/><br/>
+	  You can see my contributions over the last 2 years are
+	dwarfed by the teams efforts
+	  <br/><br/>
+	  As a team we celebrate our code improvements.
+	  <br/><br/>
+	  Pointing out and cheering on particularly good commits, faster tests,
 	code deletion.
 	  <br/><br/>
-	  Linking to little victories in campfire all the
-	way.
+	  Linking to little victories in campfire all the way.
 	</div>
     </section>
 
@@ -365,8 +424,8 @@
 	<pre>[~/projects/deals]git log --numstat --pretty="%H" --author="dan.mayer" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</pre>
         <pre>[~/projects/deals] git log --numstat --pretty="%H" --since="2 years ago" app | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d, -%d\n", plus, minus)}'</pre>
 	<div class="slide-notes">
-	  Wanted to share a fun git trick to pull up stats on any
-	author and the team.
+	  If you want to grab some of your own stats, I wanted to
+	share a fun git trick to pull up stats for an author and the team.
 	</div>
     </section>
 
@@ -374,11 +433,17 @@
       <h2>Problem: Unused Actions</h2>
       
       <div class="slide-notes">
-	To find large sections of code no longer in use. Let's start
-	to find	which actions and routes that are out of use.
+	To find large sections of code no longer in use.
 	<br/><br/>
-	This is one of the easiest ways to find unnecessary code,
-	removing the top level action, associated helpers, and views. 
+	Let's start by finding actions and routes that are out of use.
+	<br/><br/>
+	This is one of the easiest ways to find unnecessary code.
+	<br/><br/>
+	It also can be the most rewarding by removing the top level
+	action
+	<br/><br/>
+	then following through to remove associated helpers, views,
+	and occasionally models. 
       </div>
     </section>
 	
@@ -389,22 +454,25 @@
       <img src="./images/NR_usage.png" />
       <div class="slide-notes">
 	One of the easiest ways to gain insight into what code is
-      being used in production is checking with any of the 3rd party
+      being used in production is 3rd party
       performance monitoring tools.
 	<br/><br/>
 	There are a number of popular Ruby performance monitoring
       services. Each allow you to hook into their service sending some
       data to help you monitor and find performance issues.
 	<br/></br>
-	In this case NewRelic but I am
-      sure Skylight.io and Traceview can get you the same data. 
+	In this case NewRelic but Skylight.io & Traceview can get you the same data. 
 	<br/><br/>
-      The transaction view you can sort transactions broken down by controller
-      route by usage. Anything with 1 view in the last seven days likely isn't pulling its
+      In the NewRelic transaction view you can sort transactions broken down by controller
+      route by usage.
+	<br/><br/>
+	Anything with 1 view in the last seven days likely isn't pulling its
       weight. It might be worth discussing the cost of those features
-      with the business team.
+      with the team.
 	<br/><br/>
-	This view also doesn't show you what received 0 requests.
+	Some of them you may be able to cut.
+	<br/><br/>
+	A problem with this view, is that it doesn't show which actions received 0 requests.
       </div>
     </section>
 
@@ -428,8 +496,14 @@ AuthorizationRulesController#graph
 AuthorizationRulesController#change</pre>
       <div class="slide-notes">
         I created a gem to make this easy to check. You can download
-      the CSV of NR transactions and it can compare it to your Rails
-      routes. Finding any routes you have which are never hit.
+      the CSV of NR transactions
+	<br/><br/>
+	and it can compare it to your Rails routes.
+	<br/><br/>
+	Finding any routes you have which are never hit.
+	<br/><br/>
+	The gem works by loading the routes into memory and comparing
+      thme with the downloaded data.
 	<br/><br/>
 	Running this on old production apps always seems to find some long
       forgotten routes.
@@ -450,9 +524,15 @@ AuthorizationRulesController#change</pre>
         </ul>
       </p>
       <div class="slide-notes">
+	Moving away from 3rd party tools
+	<br/><br/>
+	Lets look Custom Stats
+	<br/><br/>
         Custom Stats instrumentation is very flexible. We are going to
       look at a number of techniques to gain insight into what your
       application is actually doing in production.
+	<br/><br/>
+	We will be looking at (read the list).
       </div>
     </section>
 
@@ -472,22 +552,27 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
         </code></pre>
       </p>
       <div class="slide-notes">
-	We use a number of tools for custom stats, that I wanted to
-      quickly mention.
+	To gather those stats we often rely on the same small set of
+        tools.
 	<br/><br/>
-       I wanted to give a shout out to Etsy here, as we rely heavily on StatsD, and they
-      have shared in great detail how they also use metrics to gain
-      all sorts of code and business insights.
+	Which I wanted to quickly mention.
 	<br/><br/>
-      StatsD is also extremely performant and while it can be lossy,
+	We use graphite via StatsD
+	<br/><br/>
+       I wanted to give a shout out to Etsy here, as we rely heavily
+        on their tools
+	<br/><br/>
+	They have shared in great detail how they also use metrics to gain insights.
+	<br/><br/>
+	StatsD is also extremely performant and while it can be lossy,
       we haven't ever run into performance issues while adding many metrics.
 	<br/><br/>
-	Also, quickly here is some shared constants that will appear in
-      several of the examples. Internally we have wrappers around
-      our Redis and StatsD usage to deal with things like app name
-      spacing, common error handling, configurations, etc.
+	Below you see some shared constants that will appear in
+      several of the examples.
 	<br/><br/>
-	In these examples I am just using Redis and StatsD directly.
+	Internally we have wrappers around our Redis and StatsD usage to deal with things like app name-spacing, common error handling, configurations, etc.
+	<br/><br/>
+	In the examples I am just using Redis and StatsD directly.
       </div>
     </section>
 
@@ -495,7 +580,10 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
       <h2>Problem: Unused Actions</h2>
       
       <div class="slide-notes">
-	Earlier We solved this using 3rd party performance tools, but
+	We already discussed how finding unused actions be one of the
+	most valuable things to clean up.
+	<br/><br/>
+	Earlier we solved this using 3rd party performance tools, but
 	it is easy to solve with some custom stats. 
       </div>
     </section>
@@ -524,13 +612,24 @@ REDIS = Redis::Namespace.new(:app_name, :redis => Redis.new)
   end
 </code></pre>
       <div class="slide-notes">
+	If you don't pay for any of the performance tools this can get
+    you some useful basic information.
+	<br/><br/>
+	Obviously 3rd party performance monitors give you a
+    lot more details than this, but this level of data can still be very useful
+	<br/><br/>
 	We have a couple of ways we have added tracking on endpoints
       and timing in Rails. I think the simplest and cleanest example
       was done by <a href="https://twitter.com/jwhitmire">Jeff
-    Whitmire</a>. Obviously 3rd party performance monitors give you a
-    lot more details than this, but this lets you collect basic usage
-    and performance stats. Make it easy to See what is being used or
-      to configure alerts based on percentile performance changes.
+    Whitmire</a>.<br/><br/>
+	The code hear just hooks into ApplicationController
+	<br/><br/>
+	Using a simple before filter to increment each endpoint
+	<br/<br/>
+	and using an around filter to record basic timing information
+    for each endpoint.
+	<br/><br/>
+	Comparing your routes to traffic can find no longer used actions.
       </div>
     </section>
       
@@ -558,11 +657,14 @@ def after_perform(*args)
   STATSD.increment "resque.completed.#{get_event_name}"
 end</code></pre>
       <div class="slide-notes">
-	 It is easy to instrument how often something is
-  processed, completed. With a bit more work you can record execution time around jobs or
-  success/failures on completion.
+	 It is easy to instrument how often a event is processed.
 	<br/><br/>
-	This is a simple example assuming Resque, but is pretty similar for all queueing frameworks.
+	With a bit more work you can record execution time around jobs or
+	success/failures on completion.
+	<br/><br/>
+	This is a simple example assuming hooking into Resque
+	<br/><br/>
+	but is pretty similar for all queueing frameworks.
       </div>
     </section>
 
@@ -570,10 +672,12 @@ end</code></pre>
       <h2>Problem: Mailers</h2>
       <p>Are you still sending all your mailers?</p>
       <div class="slide-notes">
-	Mailers like background jobs and come and go. Stating every
-  mailer as it is sent lets you know when a mailer is no longer needed.
+	Mailers like background jobs can come and go.
 	<br/><br/>
-	Or perhaps knowing which mailers you should spend more time improving based on the send volume.
+	Stating every mailer as it is sent lets you know when a mailer is no longer needed.
+	<br/><br/>
+	Alternatively it lets you know your most popular mailers which
+      might be worth spending more time improving.
       </div>
     </section>
 
@@ -588,7 +692,14 @@ class BaseMailer < ActionMailer::Base
   end
 end</code></pre>
      <div class="slide-notes">
-       This example is how to hooking into action mailer to stat every mailer sent.
+       This example hooks into ActionMailer::Base to record stats on
+      every mailer sent.
+       <br/><br/>
+       Like all the other stats you can check graphite to see if a
+      mailer is out of use before working on the code.
+       <br/><br/>
+       We were able to remove a number of mailers like this opposed to
+      spending the time fixing them when upgrading Rails.
       </div>
     </section>
 
@@ -597,15 +708,20 @@ end</code></pre>
       <p>which views are ever rendered: partials, templates, layouts,
       for each format?</p>
       <div class="slide-notes">
-	The view layer more than anywhere else can get quickly messy
+	The view layer more than anywhere else can quickly get messy
 	and hard to follow.
 	<br/><br/>
-	Partials inside layouts, inside partials, and
-	ajax... Oh My.
+	Templates inside layouts, with partials inside partials... Oh My.
 	<br/><br/>
-	A new view gets tested or moved and people aren't
-	sure if the partial is used anywhere else. AB tests leave views
-	behind.
+	Often a new view gets tested and the old one isn't removed
+	<br/><br/>
+	Devs aren't sure if the partial is used anywhere else. So they
+      copy it and make a new one opposed to changing the shared partial.
+	<br/><br/>
+	AB tests leave views behind.
+	<br/><br/>
+	Views also bloat out your helpers over time leaving many view
+      specific helpers spread through out the code.
       </div>
     </section>
       
@@ -628,12 +744,21 @@ class RenderTracker
   end
 end</code></pre>
      <div class="slide-notes">
-       With ActiveSupport notifications it is easy to stats every view file as it is
-  rendered. Again beyond finding unused view code (and the related
-  helpers), you get a nice picture of what your most important view
-  components actually are.
+       ActiveSupport notifications makes it is easy to stats every view file as it is
+  rendered.
        <br/><br/>
-       This shows you could either stat, or log which views are being used.
+       In this example we subscript to<br/>
+       render_partial.action_view and<br/>
+       render_template.action_view
+       <br/><br/>
+       This shows how you can either stat or log in the tracking
+  method.
+       <br/><br/>
+       When working on a view file you can now check what kind traffic
+  volume the change will effect.
+       <br/><br/>
+       Or if the view file you were about to refactor, upgrade, and
+  fix is out of use.
      </div>
     </section>
 
@@ -653,14 +778,22 @@ FLATFOOT.unused_views
 => ["app/views/something/_old_partial.html.erb",...</code></pre>
       <div class="slide-notes">
 	The view tracking pattern is simple and I wanted to reuse it
-	a few places. So we have a nice little gem to quickly hook it
-	up into Rails apps. It provides some helpers to output unused
-	views by comparing the view renderings with the files you
-	actually have on disk.
+	a few places.
+	<br/><br/>
+	So we made a gem called Flatfoot to quickly hook it
+	up into Rails apps.
+	<br/><br/>
+	You can see flatfoot still uses notifications subscriptions
+	and stores view data in a redis set.
+	<br/><br/>
+	It provides some helpers to output unused
+	views by comparing the view renderings with the files on disk.
 	<br/><br/>
 	Making it super simple to do dig into view
-	layer cleanup, and all the related helpers and modules that go
-	with it.
+	layer cleanup.
+	<br/><br/>
+	Often the biggest wins when removing view files are associated
+	helpers, Javascript, and CSS.
       </div>
     </section>
 
@@ -668,8 +801,8 @@ FLATFOOT.unused_views
       <h2>ActiveSupport::Notifications Oddity</h2>
       <pre><code>###
         # Annoyingly while you get full path for templates
-        # notifications only pass part of the path for layouts dropping any format info
-        # such as .html.erb or .js.erb
+        # templates with file extensions
+        # layouts without
         # http://edgeguides.rubyonrails.org/active_support_instrumentation.html#render_partial-action_view
         ###
         if layout_file = payload[:layout]
@@ -688,9 +821,14 @@ FLATFOOT.unused_views
 	least surprise I felt as I was  working on this.
 	<br/><br/>
 	Template files in the notifications include the full pathname and file
-	extensions. For layout files it does not. It tripped me up a bit so I figured
-	I would mention it. Flatfoot has some methods to help layouts
-	even without extensions.
+	extensions.
+	<br/><br/>
+	For layout files it does not.
+	<br/><br/>
+	It tripped me up a bit so I figured
+	I would mention it. Perhaps someone here can later tell me why.
+	<br/><br/>
+	Flatfoot has some methods to help track layouts without extensions.
       </div>
     </section>
 
@@ -701,13 +839,19 @@ FLATFOOT.unused_views
       </p>
       <div class="slide-notes">
 	Another piece of an application that can easily become a out
-	of sync is translation keys. Over time, it is hard to know which
+	of sync is translation keys.
+	<br/><br/>
+	Over time, it is hard to know which
 	translations are still in use.
 	<br/><br/>
+	Often when changing features and removing old code
+      translations are left behind.
+	<br/><br/>
 	Translation keys
-	end up causing a not fun memory bloat for production rails
-	processes. That unchecked over time can be quite costly for
-	overall performance.
+	end up causing a sizable memory bloat for production rails
+	processes.
+	<br/><br/>
+	As apps load all translations and keep them available in memory.
       </div>
     </section>
       
@@ -736,6 +880,11 @@ FLATFOOT.unused_views
     number of uses, but is particularly well suited to help track down
     no longer used translation keys.
 	<br/><br/>
+	The code to set this up is to large to fully display here
+	<br/><br/>
+	but it makes it easy to find unused keys and is optimized for
+    performance.
+	<br/><br/>
 	Check out the gem for more details on how
     to track translations, but the above shows a bit of the basics.
       </div>
@@ -747,13 +896,22 @@ FLATFOOT.unused_views
       entry point for the code execution? One off trackers can
       help.</p>
       <div class="slide-notes">
-	One problem with tracking only controllers and actions, is that
+	One problem with tracking only controllers actions, is that
       the often serve multiple formats and request paths.
 	<br/><br/>
+	Also, frequently in scary dark corners of models, helpers, and
+      libs folders
+	<br/>
+	it is hard to be sure if something is entirely out
+      of use.
+	<br/><br/>
 	For that,
-      one of trackers can be useful. Tracking format specific
+      one off trackers can be useful.
+	<br/><br/>
+	Tracking format specific
       endpoints, conditional paths, the ever growing case statement
-      branching in to many directions and bit of code really.
+	<br/><br/>
+	Really to quickly see the frequency of use of any piece of code.
 	<br/><br/>
       </div>
     </section>
@@ -1331,8 +1489,10 @@ file:
     </script>
       
     <p class="deck-notes-pop" aria-role="status">
+      <!--
       <a href="#" onclick="script: notesLoad();" class="deck-notes-pop-link">speaker notes</a>
-    </p>
+      -->
+      </p>
 
     <!-- deck.goto snippet -->
     <form action="." method="get" class="goto-form">
