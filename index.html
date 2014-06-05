@@ -1182,6 +1182,36 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
        </div>
     </section>
     -->
+
+    <section class="slide">
+      <h2>Production Code Coverage</h2>
+      <div class="slide-notes">
+	Most of the mention stat monitors focus on a particular piece of the
+	puzzle.
+	<br/><br/>
+	Stats takes effort to setup ahead of time and then time to collect and analyze the data.
+	<br/><br/>
+	It seemed like a pattern could be
+      abstracted, which would be more generally useful.
+	<br/><br/>
+	Really I wanted to know how often a given line of code was being run in production.
+	<br/><br/>
+	Ruby VM tooling isn't quite there to let us do this, but it keeps getting
+      better.
+	<br/><br/>
+	while Ruby's StdLib Coverage make this easy to do for tests, it has
+      some bugs that prevent it being used for production.
+	<br/><br/>
+	Ruby 2.1 introduced a sampling profiler, which I am
+      investigating for real time code coverage without larger
+      performance impacts.
+	<br/><br/>
+	Although being on Ruby 2.1 would limit the usefulness for
+      large old monoRail apps.
+	<br/><br/>
+	To get support in Ruby 1.9.X and up I build a solution with set_trace_func
+      </div>
+    </section>
        
     <section class="slide">
       <h2>Production Code Coverage: Coverband</h2>
@@ -1198,33 +1228,34 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
         </ul>
       </p>
       <div class="slide-notes">
-	Most of the above monitors focus on a particular piece of the
-      puzzle. It takes effort to setup ahead of time and then time to
-      collect and analyze the data.
+	The current version of coverband, is based on set_trace_func,
+      which while slow can be used with some sampling.
 	<br/><br/>
-	It seemed like a pattern could be
-      abstracted, which would be more generally useful. Really I
-      wanted to know how often a given line of code was being run in
-      production.
-	<br/><br/>
-	Ruby VM tooling around this area keeps getting
-      better, while Coverage make this easy to do for tests, it has
-      some bugs that prevent it being used for production. I ended up
-      working with set_trace_fun and sampling a percentage of requests
-      to get some great data.
+	We are using it in production on large Rails apps with a low
+      sample rate and collecting some pretty good data.
 	<br/><br/>
 	Unfortunately, the performance hit is pretty large for big
-      applications. I am running this on Monorail size apps with about
+      applications.
+	<br/>
+	I am running this on Monorail size apps with about
       1% of requests being sampled. While I can run 60-90% of requests
       small Sinatra apps without noticing much of a performance
       impact.
 	<br/><br/>
+	Unfortunately the Std Lib Coverage had a bug causing segfaults
+      in Ruby 1.9 and 2.0. While it doesn't segfault in 2.1 it still
+      doesn't work correctly when sampling, only reporting data for a
+      file once, ignoring usage after that.
+	<br/><br/>
 	I am currently in progress with a native c extension which
-      should significantly improve performance. I also think that
-      using a sampling profiler based on time opposed to sampling full
-      requests, which was built into Ruby 2.1, that I should be able
-      to gather this data in production without a noticeable impact on
-      application performance. If anyone has strong C skills and is
+	should significantly improve performance. This would allow
+	faster data collection still going back to Ruby 1.9.X.
+	<br/><br/>
+	As mentioned earlier the sampling profiler introduced in Ruby
+	2.1, will be a great fit and I have a version in the works
+	utilizing that as well.
+	<br/>br/>
+	If anyone has strong C skills and is
       interested in helping out, I am definitely in need of some help
       in this area. 
       </div>
