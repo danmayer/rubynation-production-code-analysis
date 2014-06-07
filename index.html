@@ -716,12 +716,10 @@ end</code></pre>
 	<br/><br/>
 	Templates inside layouts, with partials inside partials... Oh My.
 	<br/><br/>
-	Often a new view gets tested and the old one isn't removed
+	Often a new view gets AB tested and the old one isn't removed.
 	<br/><br/>
 	Devs aren't sure if the partial is used anywhere else. So they
       copy it and make a new one opposed to changing the shared partial.
-	<br/><br/>
-	AB tests leave views behind.
 	<br/><br/>
 	Views also bloat out your helpers over time leaving many view
       specific helpers spread through out the code.
@@ -750,11 +748,11 @@ end</code></pre>
        ActiveSupport notifications makes it is easy to stats every view file as it is
   rendered.
        <br/><br/>
-       In this example we subscript to<br/>
+       In this example we subscribe to<br/>
        render_partial.action_view and<br/>
        render_template.action_view
        <br/><br/>
-       This shows how you can either stat or log in the tracking
+       This shows how you can either stat or log via the tracking
   method.
        <br/><br/>
        When working on a view file you can now check what kind traffic
@@ -792,7 +790,7 @@ FLATFOOT.unused_views
 	It provides some helpers to output unused
 	views by comparing the view renderings with the files on disk.
 	<br/><br/>
-	Making it super simple to do dig into view
+	Making it super simple to dig into view
 	layer cleanup.
 	<br/><br/>
 	Often the biggest wins when removing view files are associated
@@ -883,13 +881,13 @@ FLATFOOT.unused_views
     number of uses, but is particularly well suited to help track down
     no longer used translation keys.
 	<br/><br/>
-	The code to set this up is to large to fully display here
+	The code to set this up is too large to fully display here
 	<br/><br/>
 	but it makes it easy to find unused keys and is optimized for
     performance.
 	<br/><br/>
 	Check out the gem for more details on how
-    to track translations, but the above shows a bit of the basics.
+    to track translations, but this slide shows a bit of the basics.
       </div>
     </section>
 
@@ -1003,8 +1001,10 @@ end</code></pre>
 	That covers various custom stats so let's talk a little bit
       about logs.
 	<br/><br/>
-	 Your application logs are a mine of information just waiting
-      to help you out. When you have multiple applications and you are
+	 Your application logs are a gold mine of information just waiting
+      to help you out.
+	<br/><br/>
+	When you have multiple applications and you are
       trying to refactor or remove old endpoints knowing, which
       clients and versions are using the application can be critical.
 	<br/><br/>
@@ -1030,16 +1030,23 @@ end</code></pre>
         </ul>
       </p>
       <div class="slide-notes">
+	To get the most from your logs it takes a bit of work to get
+      them into shape.
+	<br/><br/>
+	You need a near real time log query tool.
+	<br/><br/>
+	Try to get all your apps logging to the same query tool.
+	<br/><br/>
+	Apps with multiple with logs like nginx, cron, app, and
+      background jobs like wise need to all be sent to the same tool.
+	<br/><br/>
 	You can implement render_tracking, translation_key tracking,
       and most of the other mentioned systems just by logging data in
       query-able formats to your logs and crafting the correct queries.
 	<br/><br/>
 	Logs can go deep when you are digging into specific problems like
-      debugging exceptions.
-	<br/><br/>
-	All your exceptions should link you back
-      to the original logs related to the request causing the
-      exceptions.
+      debugging exceptions or finding the last few callers while
+      deprecating endpoints.
       </div>
     </section>
 
@@ -1071,16 +1078,18 @@ source="*app/*" user_id=XXX
 	craft once you have well formatted logs.
 	<br/><br/>
 	Most common format per action controller pair
-	<br/>
+	<br/><br/>
 	Endpoints with more 406 Not acceptable than status 200
 	success, this often means old clients which are no longer
-	valid are never successfully getting to an endpoint.
-	<br/><br/>Possibly
-	an endpoint that could be deprecated and removed.
+	valid are never successfully getting to an endpoint. Perhaps
+	it can be removed
 	<br/><br/>
 	Which endpoint redirects more than returns 200
-	<br/>
+	<br/><br/>
 	View all requests by a given user
+	<br/><br/>
+	I just wanted to share a few examples of questions you can
+	answer with your logs.
       </div>
     </section>
       
@@ -1091,16 +1100,17 @@ source="*app/*" user_id=XXX
 Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       </p>
       <div class="slide-notes">
-	Trying to discover how the code reaches a path you never
-      expect or intend it to reach anymore can be complicated. Perhaps
-      a old client gem exists out there in the wild, or someone is
-      linking to a url with params you thought were
-      deprecated.
-	 <br/><br/>
-	Whatever the case you can log the caller inside a
-      path to figure out the call path that got there. If you have a
-      request_id, you can then tie that back to the initial entry
-      point and parameters into your application.
+	If you are trying to discover how the code reaches a path you never
+      expect or intend to be executed anymore.
+	<br/><br/>
+	Tracking that down can be complicated. Detailed logs can help.
+	<br/><br/>
+	You can log the caller inside a
+      method to figure out the call path that reached there.
+	<br/><br/>
+	These deprecation log lines will let you also discover the initial entry
+	point and parameters into your application, if you log
+      request_id, which I will mention shortly.
       </div>
     </section>
 
@@ -1132,8 +1142,16 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
 	Combine the deprecation logging with a good idea from <a
     href="http://www.twitter.com/geeksam">Sam Livingston-Gray</a>,
     which automatically builds the deprecation stat based on the
-    caller. You end up with a really useful deprecation_trace helper
+    caller.
+	<br/><br/>
+	You end up with a really useful deprecation_trace helper method
     you can use while investigating code to remove.
+	<br/><br/>
+	This code is a bit to complicated to fit on the slide but it
+      basically extracts the class and method name to build a well
+      formatted deprecation namespace.
+	<br/><br/>
+	Making it easy to find code from the stat name.
       </div>
     </section>
 
@@ -1155,22 +1173,34 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       </p>
        <div class="slide-notes">
 	 One place I turn to logs is to know what is happening on a
-      the system between applications or components. When deprecating
-      old code or splitting up an app tracking down find edge usage
-      can be tricky. Logs can be particularly useful for this level of
-      information. Imprint helps trace across apps and components.
+      the system between applications or background queues.
+	 <br/><br/>
+	 Logs can be particularly useful for this level of
+      information, Imprint helps make your logs easy to trace across
+      apps, jobs, and exceptions.
 	 <br/><br/>
 	 Imprint builds on ideas from Twitter. Twitter created ZipKin,
-      but most of the tooling is in the Scala world. Rails also
-      provides a request_id which IMPRINT can use. Imprint makes it
+      but most of the tooling is in the Scala world. REcent versions
+      of Rails also
+      provided a request_id which IMPRINT can use.
+	 <br/><br/>
+	 Imprint makes it
       easy to capture a request trace and help propagate it through
       multiple systems. The gem helps simplify the process to integrate it into
-      multiple tools.
+      your tools.
 	 <br/><br/>
 	 We use imprint in our base internal api-client. This means
        all inter-app service calls will pass the current requests
-       trace_id as a header to the server. The api service then uses
-       this passed id while logging its requests.
+       trace_id as a header to the server. The receiving api service
+      then uses imprint to set the existing trace_id for its logging.
+	 <br/><br/>
+	 By logging request_id's, and placing that ID in the header,
+	 you get a powerful debugging tool.
+	 <br/><br/>
+	 all your exceptions should now be able to link you back
+	 to the original logs related to the request. Similarly failed
+      background jobs, logs can be found, and even traced to the
+      initial request that queued the background job.
        </div>
     </section>
 
@@ -1212,7 +1242,7 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
 	Although being on Ruby 2.1 would limit the usefulness for
       large old monoRail apps.
 	<br/><br/>
-	To get support in Ruby 1.9.X and up I build a solution with set_trace_func
+	To get support in Ruby 1.9 I built a solution with set_trace_func
       </div>
     </section>
        
@@ -1231,8 +1261,10 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
         </ul>
       </p>
       <div class="slide-notes">
-	The current version of coverband, is based on set_trace_func,
-      which while slow can be used with some sampling.
+	While useful being based on set_trace_func,
+	can be slow.
+	<br/><br/>
+	To deal with that I allow for request sampling.
 	<br/><br/>
 	We are using it in production on large Rails apps with a low
       sample rate and collecting some pretty good data.
@@ -1245,18 +1277,20 @@ Rails.logger.info "deprecated=true trace: #{clean_trace}"</code></pre>
       small Sinatra apps without noticing much of a performance
       impact.
 	<br/><br/>
-	Unfortunately the Std Lib Coverage had a bug causing segfaults
-      in Ruby 1.9 and 2.0. While it doesn't segfault in 2.1 it still
+	Unfortunately the Std Lib Coverage bug mentioned was causing segfaults
+      in Ruby 1.9 and 2.0. While tht was fix and it doesn't segfault in 2.1 it still
       doesn't work correctly when sampling, only reporting data for a
       file once, ignoring usage after that.
 	<br/><br/>
-	I am currently in progress with a native c extension which
-	should significantly improve performance. This would allow
-	faster data collection still going back to Ruby 1.9.X.
+	Based on Terance's talk earloer at the conference I am preparing
+      a good and reproducable bug report to submit to
+      ruby-core.
 	<br/><br/>
-	As mentioned earlier the sampling profiler introduced in Ruby
-	2.1, will be a great fit and I have a version in the works
-	utilizing that as well.
+	Thanks for inspiring me to do more than complain on twitter, Terance.
+	<br/><br/>
+	Also, I am currently in progress with a native c extension which
+	should significantly improve performance. This would allow
+	faster data collection still going back to Ruby 1.9
 	<br/>br/>
 	If anyone has strong C skills and is
       interested in helping out, I am definitely in need of some help
@@ -1309,14 +1343,14 @@ end</code></pre>
 	<br/><br/>
 	A couple settings to note, `config.startup_delay` Rails
       defines a lot of methods dynamically on the first few requests
-      we ignore d because they can run much slower with Coverband.
+      so they are ignored because they can run much slower with Coverband.
 	<br/><br/>
 	percentage is the number of requests that we will sample and
       record with coverband.
 	<br/><br/>
 	ignore lets you not record section of code you wish to
       skip. Skipping heavy non app code like vendor or lib can also
-      help to reduce the performance impacts.
+      help to reduce the performance impact.
       </div>
     </section>
 
@@ -1340,9 +1374,8 @@ run ActionController::Dispatcher.new</code></pre>
 	setup the middleware.
 	<br/><br/>
 	In this example I am setting up the middleware as early as
-      possible in the `config.ru`. Really unless you have lots of
-      custom rack middleware setting it up anywhere in your middleware
-      stack should be find. 
+      possible in the `config.ru`. You can also, just set it up in the
+	standard Rails middleware stack.
       </div>
     </section>
 
@@ -1362,11 +1395,22 @@ file:
   [516, 38577]]</code></pre>
       <div class="slide-notes">
 	Coverband can give you interesting information and help you to
-      find hotspots of code in development mode as well. If you enable
-      verbose at the end of each request that coverband records it
-      outputs to the configured log a bunch of useful stats. Breaking
-      down files that were called the most, as well as the most common
-      lines called in heavily used files.
+      find code hotspots in development mode as well.
+	<br/><br/>
+	If you enable
+      verbose mode in the config, at the end of each request it
+  outputs how often a file was accessed.
+	<br/><br/>
+	If you set verbose mode to 'debug' it will further break down
+  the number of times an individual line on a file was called.
+	<br/><br/>
+	In the example output of the slide you can see application
+  helper was hit
+	43K times during this request. While like 516 of that file was
+  hit 38K times.
+	<br/><br/>
+	That doesn't always mean there is a problem, but it might be
+  worth investigating what is going on there. 
       </div>
     </section>
 
